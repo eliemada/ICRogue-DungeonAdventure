@@ -160,7 +160,7 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
      * @return (int) : the height in number of rows
      */
     public int getHeight(){
-        return areaBehavior.getWidth();
+        return areaBehavior.getHeight();
     }
 
     /** @return the Window Keyboard for inputs */
