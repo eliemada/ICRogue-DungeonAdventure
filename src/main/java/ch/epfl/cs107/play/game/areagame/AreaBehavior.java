@@ -44,9 +44,9 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
     }
 
     public void dropInteractionOf(Draggable draggable, DiscreteCoordinates mouseCoordinates) {
-    	if(mouseCoordinates.x >= 0 && mouseCoordinates.y >= 0 && mouseCoordinates.x < width && mouseCoordinates.y < height) {
-    		cells[mouseCoordinates.x][mouseCoordinates.y].dropInteractionOf(draggable);
-    	}
+        if(mouseCoordinates.x >= 0 && mouseCoordinates.y >= 0 && mouseCoordinates.x < width && mouseCoordinates.y < height) {
+            cells[mouseCoordinates.x][mouseCoordinates.y].dropInteractionOf(draggable);
+        }
     }
 
     /// AreaBehavior implements Interactor.Listener
@@ -68,26 +68,26 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
             cells[dc.x][dc.y].viewInteractionOf(interactor);
         }
     }
-    
+
     protected void setCell(int x,int y, Cell cell) {
-    	cells[x][y] = cell;
+        cells[x][y] = cell;
     }
-    
+
     protected Cell getCell(int x, int y) {
-    	return cells[x][y];
+        return cells[x][y];
     }
     protected int getRGB(int r, int c) {
-    	return behaviorMap.getRGB(r, c);
+        return behaviorMap.getRGB(r, c);
     }
-    
+
     protected int getHeight() {
-    	return height;
+        return height;
     }
-    
+
     protected int getWidth() {
-    	return width;
+        return width;
     }
-    
+
 
     /// AreaBehavior implements Interactable.Listener
 
@@ -134,5 +134,114 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
      * Each AreaGame will have its own Cell extension.
      * At minimum a cell is linked to its content
      */
+    public abstract class Cell implements Interactable{
 
+        /// Content of the cell as a set of Interactable
+        protected Set<Interactable> entities;
+        protected DiscreteCoordinates coordinates;
+
+
+        /**
+         * Default Cell constructor
+         * @param x (int): x-coordinate of this cell
+         * @param y (int): y-coordinate of this cell
+         */
+        public Cell(int x, int y){
+            entities = new HashSet<>();
+            coordinates = new DiscreteCoordinates(x, y);
+        }
+
+        /**
+         * Do the given draggableAreaEntity interacts with all Droppable sharing the same cell
+         * @param interactor (Interactor), not null
+         */
+        private void dropInteractionOf(Draggable draggable) {
+            for(Interactable interactable : entities){
+                if(interactable instanceof Droppable) {
+                    Droppable droppable = (Droppable)interactable;
+                    if(droppable.canDrop())
+                        droppable.receiveDropFrom(draggable);
+                }
+            }
+            if(this instanceof Droppable) {
+                Droppable droppable = (Droppable)this;
+                if(droppable.canDrop())
+                    droppable.receiveDropFrom(draggable);
+            }
+
+        }
+
+        /**
+         * Do the given interactor interacts with all Interactable sharing the same cell
+         * @param interactor (Interactor), not null
+         */
+        private void cellInteractionOf(Interactor interactor){
+            interactor.interactWith(this, true);
+            for(Interactable interactable : entities){
+                if(interactable.isCellInteractable())
+                    interactor.interactWith(interactable, true);
+            }
+        }
+
+        /**
+         * Do the given interactor interacts with all Interactable sharing the same cell
+         * @param interactor (Interactor), not null
+         */
+        private void viewInteractionOf(Interactor interactor){
+            interactor.interactWith(this, false);
+            for(Interactable interactable : entities){
+                if(interactable.isViewInteractable())
+                    interactor.interactWith(interactable, false);
+            }
+        }
+
+        /**
+         * Do the given interactable enter into this Cell
+         * @param entity (Interactable), not null
+         */
+        protected void enter(Interactable entity) {
+            entities.add(entity);
+        }
+
+        /**
+         * Do the given Interactable leave this Cell
+         * @param entity (Interactable), not null
+         */
+        protected void leave(Interactable entity) {
+            entities.remove(entity);
+        }
+
+        /**
+         * Indicate if the given Interactable can leave this Cell
+         * @param entity (Interactable), not null
+         * @return (boolean): true if entity can leave
+         */
+        protected abstract boolean canLeave(Interactable entity);
+
+        /**
+         * Indicate if the given Interactable can enter this Cell
+         * @param entity (Interactable), not null
+         * @return (boolean): true if entity can enter
+         */
+        protected abstract boolean canEnter(Interactable entity);
+
+        /// Cell implements Interactable
+
+        @Override
+        public boolean takeCellSpace(){
+            return false;
+        }
+
+        @Override
+        public void onLeaving(List<DiscreteCoordinates> coordinates) {}
+
+        @Override
+        public void onEntering(List<DiscreteCoordinates> coordinates) {}
+
+        @Override
+        public List<DiscreteCoordinates> getCurrentCells() {
+            return Collections.singletonList(coordinates);
+        }
+
+    }
 }

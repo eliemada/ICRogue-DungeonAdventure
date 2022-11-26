@@ -7,6 +7,8 @@ import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.io.ResourceFileSystem;
 import ch.epfl.cs107.play.window.Window;
 import ch.epfl.cs107.play.window.swing.SwingWindow;
+import ch.epfl.cs107.play.game.tutosSolution.Tuto2;
+
 
 /**
  * Main entry point.
@@ -29,7 +31,7 @@ public class Play {
 
         // Create a demo game and initialize corresponding texts
 
-		//final Game game = new Tuto2();
+		final Game game = new Tuto2();
 
 		// Use Swing display
 		final Window window = new SwingWindow(game.getTitle(), fileSystem, WINDOW_WIDTH, WINDOW_HEIGHT);
