@@ -44,9 +44,9 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
     }
 
     public void dropInteractionOf(Draggable draggable, DiscreteCoordinates mouseCoordinates) {
-        if(mouseCoordinates.x >= 0 && mouseCoordinates.y >= 0 && mouseCoordinates.x < width && mouseCoordinates.y < height) {
-            cells[mouseCoordinates.x][mouseCoordinates.y].dropInteractionOf(draggable);
-        }
+    	if(mouseCoordinates.x >= 0 && mouseCoordinates.y >= 0 && mouseCoordinates.x < width && mouseCoordinates.y < height) {
+    		cells[mouseCoordinates.x][mouseCoordinates.y].dropInteractionOf(draggable);
+    	}
     }
 
     /// AreaBehavior implements Interactor.Listener
@@ -68,26 +68,26 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
             cells[dc.x][dc.y].viewInteractionOf(interactor);
         }
     }
-
+    
     protected void setCell(int x,int y, Cell cell) {
-        cells[x][y] = cell;
+    	cells[x][y] = cell;
     }
-
+    
     protected Cell getCell(int x, int y) {
-        return cells[x][y];
+    	return cells[x][y];
     }
     protected int getRGB(int r, int c) {
-        return behaviorMap.getRGB(r, c);
+    	return behaviorMap.getRGB(r, c);
     }
-
+    
     protected int getHeight() {
-        return height;
+    	return height;
     }
-
+    
     protected int getWidth() {
-        return width;
+    	return width;
     }
-
+    
 
     /// AreaBehavior implements Interactable.Listener
 
@@ -156,21 +156,21 @@ public abstract class AreaBehavior implements Interactable.Listener, Interactor.
          * @param interactor (Interactor), not null
          */
         private void dropInteractionOf(Draggable draggable) {
-            for(Interactable interactable : entities){
+        	for(Interactable interactable : entities){
                 if(interactable instanceof Droppable) {
-                    Droppable droppable = (Droppable)interactable;
-                    if(droppable.canDrop())
-                        droppable.receiveDropFrom(draggable);
+                	Droppable droppable = (Droppable)interactable;
+                	if(droppable.canDrop())
+                		droppable.receiveDropFrom(draggable);
                 }
             }
-            if(this instanceof Droppable) {
-                Droppable droppable = (Droppable)this;
-                if(droppable.canDrop())
-                    droppable.receiveDropFrom(draggable);
-            }
-
+        	if(this instanceof Droppable) {
+            	Droppable droppable = (Droppable)this;
+            	if(droppable.canDrop())
+            		droppable.receiveDropFrom(draggable);
+        	}
+        		
         }
-
+        
         /**
          * Do the given interactor interacts with all Interactable sharing the same cell
          * @param interactor (Interactor), not null
