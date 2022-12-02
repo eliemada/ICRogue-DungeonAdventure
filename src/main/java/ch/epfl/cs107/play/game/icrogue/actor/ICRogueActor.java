@@ -21,10 +21,16 @@ public abstract class ICRogueActor extends MovableAreaEntity {
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
     }
+
+    public void leaveArea() {
+        getOwnerArea().unregisterActor(this);
+    }
     @Override
     public List<DiscreteCoordinates> getCurrentCells(){
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
+
+    public void draw(){};
 
     @Override
     public boolean takeCellSpace(){
@@ -43,10 +49,6 @@ public abstract class ICRogueActor extends MovableAreaEntity {
     public void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor,
                                      boolean isCellInteraction){
 
-    }
-
-    public void leaveArea(){
-        getOwnerArea().unregisterActor(this);
     }
 
 

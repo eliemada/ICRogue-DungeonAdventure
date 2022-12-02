@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
@@ -23,18 +24,22 @@ public class ICRoguePlayer extends ICRogueActor {
     private final Keyboard keyboard;
     //private final Sprite spriteUp,spriteDown,spriteRight,spriteLeft;
     private static final int MOVE_DURATION = 5;
-    Sprite [][] sprites = Sprite.extractSprites("zelda/player",
+    private Sprite [][] sprites = Sprite.extractSprites("zelda/player",
             4, 1, 2,
             this , 16, 32, new Orientation [] { Orientation .DOWN ,
                     Orientation .RIGHT , Orientation .UP , Orientation . LEFT });
     // crée un tableau de 4 animation
-    Animation[] animations =
+    private Animation[] animations =
             Animation.createAnimations( ANIMATION_DURATION /2, sprites );
+    private Fire fireball;
     public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
                          ) {
         super(room, orientation, position);
-            //bas
-       /* spriteDown = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32),
+       /* XXX
+            Useful before the implementation of the animations !
+
+          //bas
+       spriteDown = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32),
                     new Vector(0,0));
             //haut
         spriteUp = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32),
@@ -56,15 +61,17 @@ public class ICRoguePlayer extends ICRogueActor {
     public void update(float deltaTime){
         super.update(deltaTime);
 
-
-
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT),deltaTime);
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP),deltaTime);
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT),deltaTime);
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN),deltaTime);
+        if(keyboard.get(Keyboard.X).isPressed()){
+            fireball = new Fire(getOwnerArea(), getOrientation(),
+                    getCurrentMainCellCoordinates());
+            fireball.enterArea(getOwnerArea());
+        }
 
         //TODO next time need to add the fireball when X is pressed
-        //TODO RESET when R is pressed
     }
 
     private void ifKeyIsPressed(Button pressedKey){
@@ -91,10 +98,6 @@ public class ICRoguePlayer extends ICRogueActor {
         }
     }
 
-
-    public void leaveArea() {
-        getOwnerArea().unregisterActor(this);
-    }
 
 
     @Override
