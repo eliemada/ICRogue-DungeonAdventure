@@ -1,8 +1,15 @@
 package ch.epfl.cs107.play.game.icrogue.actor;
 
-public class ICRogueActor {
+import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.MovableAreaEntity;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-    public ICRogueActor(){
+public abstract class ICRogueActor extends MovableAreaEntity {
+
+    public ICRogueActor(Area room, Orientation orientation,
+                        DiscreteCoordinates position){
+        super(room, orientation, position);
 
     }
 }
