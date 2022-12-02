@@ -1,13 +1,10 @@
 package ch.epfl.cs107.play.game.icrogue;
 
-import ch.epfl.cs107.play.game.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
-import ch.epfl.cs107.play.game.tutosSolution.actor.GhostPlayer;
-import ch.epfl.cs107.play.game.tutosSolution.area.Tuto2Area;
-import ch.epfl.cs107.play.game.tutosSolution.area.tuto2.Ferme;
-import ch.epfl.cs107.play.game.tutosSolution.area.tuto2.Village;
+
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
@@ -24,7 +21,9 @@ public class ICRogue extends AreaGame {
         currentRoom = new Level0Room(new DiscreteCoordinates(0,0));
         addArea(currentRoom);
         setCurrentArea(currentRoom.getTitle(),true);
-        //player = new ICRoguePlayer(currentRoo);
+        player = new ICRoguePlayer(currentRoom,Orientation.UP,new DiscreteCoordinates(2,2),"zelda/player");
+
+
 
     }
 

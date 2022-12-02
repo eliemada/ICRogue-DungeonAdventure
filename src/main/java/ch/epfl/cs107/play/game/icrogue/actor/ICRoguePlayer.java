@@ -7,17 +7,24 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
+import ch.epfl.cs107.play.window.Keyboard;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor {
 
+    private String spriteName;
     private Sprite sprite;
+    private static final int MOVE_DURATION = 5;
 
-
-    public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position) {
+    public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position,
+                         String givenSpritename) {
         super(room, orientation, position);
+        spriteName = givenSpritename;
 
         if (orientation.equals(Orientation.DOWN)) {
             //bas
@@ -42,29 +49,55 @@ public class ICRoguePlayer extends ICRogueActor {
         }
     }
 
+    public void update(){
+        Keyboard keyboard = getOwnerArea().getKeyboard();
+
+        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
+        //TODO next time need to add the fireball when X is pressed
+        //TODO RESET when R is pressed
+
+    }
+
+    private void ifKeyIsPressed(Button pressedKey){
+
+    }
+    private void moveIfPressed(Orientation orientation, Button pressedKey){
+        if(pressedKey.isDown()) {
+            if (!isDisplacementOccurs()) {
+                orientate(orientation);
+                move(MOVE_DURATION);
+            }
+        }
+    }
+
     @Override
     public void draw(Canvas canvas) {
+        sprite.draw(canvas);
 
     }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
-        return null;
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true ;
     }
 
     @Override
     public boolean isViewInteractable() {
-        return false;
+        return true;
     }
 
     @Override
