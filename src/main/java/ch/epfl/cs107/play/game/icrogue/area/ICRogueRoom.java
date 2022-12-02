@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class ICRogueRoom extends Area {
+
     private ICRogueBehavior behavior;
     private String behaviorName;
     private DiscreteCoordinates roomCoordinates;
