@@ -74,6 +74,7 @@ public class ICRogueBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
+
             return type.isWalkable;
         }
 

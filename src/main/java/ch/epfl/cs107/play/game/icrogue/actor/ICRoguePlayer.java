@@ -17,40 +17,37 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor {
 
-    private String spriteName;
-    private Sprite sprite;
+
+    private final Keyboard keyboard;
+    private final Sprite spriteUp,spriteDown,spriteRight,spriteLeft;
     private static final int MOVE_DURATION = 5;
 
-    public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position,
-                         String givenSpritename) {
+    public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
+                         ) {
         super(room, orientation, position);
-        spriteName = givenSpritename;
-
-        if (orientation.equals(Orientation.DOWN)) {
             //bas
-            sprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32),
-                    new Vector(.15f, -15f));
-        }
-        else if (orientation.equals(Orientation.UP)) {
+        spriteDown = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32),
+                    new Vector(0,0));
             //haut
-            sprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32),
-                    new Vector(.15f, -15.f));
-        }
-        else if (orientation.equals(Orientation.RIGHT)) {
-
+        spriteUp = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32),
+                    new Vector(0,0));
             //droite
-            sprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32),
-                    new Vector(.15f, -15.f));
-        }
-        else {
+        spriteRight = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32),
+                    new Vector(0,0));
         //gauche
-        sprite = new Sprite("zelda/player", .75f,1.5f,this,new RegionOfInterest(0,96,16,32),
-                new Vector(.15f,-15.f));
-        }
+        spriteLeft = new Sprite("zelda/player", .75f,1.5f,this,new RegionOfInterest(0,96,16,32),
+                new Vector(0,0));
+
+
+        keyboard = getOwnerArea().getKeyboard();
     }
 
-    public void update(){
-        Keyboard keyboard = getOwnerArea().getKeyboard();
+
+    @Override
+    public void update(float deltaTime){
+        super.update(deltaTime);
+
+
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
@@ -59,7 +56,6 @@ public class ICRoguePlayer extends ICRogueActor {
 
         //TODO next time need to add the fireball when X is pressed
         //TODO RESET when R is pressed
-
     }
 
     private void ifKeyIsPressed(Button pressedKey){
@@ -76,8 +72,12 @@ public class ICRoguePlayer extends ICRogueActor {
 
     @Override
     public void draw(Canvas canvas) {
-        sprite.draw(canvas);
-
+        switch (getOrientation()) {
+            case UP -> spriteUp.draw(canvas);
+            case DOWN -> spriteDown.draw(canvas);
+            case LEFT ->  spriteLeft.draw(canvas);
+            case RIGHT -> spriteRight.draw(canvas);
+        }
     }
 
     @Override

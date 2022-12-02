@@ -20,17 +20,16 @@ public class ICRogue extends AreaGame {
     private void initLevel(){
         currentRoom = new Level0Room(new DiscreteCoordinates(0,0));
         addArea(currentRoom);
-        setCurrentArea(currentRoom.getTitle(),true);
-        player = new ICRoguePlayer(currentRoom,Orientation.UP,new DiscreteCoordinates(2,2),"zelda/player");
-
-
-
+        setCurrentArea(currentRoom.getTitle(),false);
+        DiscreteCoordinates coords = new DiscreteCoordinates(2,2);
+        player = new ICRoguePlayer(currentRoom,Orientation.UP,coords);
+        player.enterArea(currentRoom,coords);
     }
+
+
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
-
-
         if (super.begin(window, fileSystem)) {
             initLevel();
             return true;

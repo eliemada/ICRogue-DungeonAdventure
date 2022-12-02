@@ -24,15 +24,14 @@ public abstract class ICRogueRoom extends Area {
      * called by begin method
      * Note it set the Behavior as needed !
      */
-    protected abstract void createLevel();
+    protected void createArea(){
+
+    }
 
     /// EnigmeArea extends Area
 
-    public final float getCameraScaleFactor() {
-        return Tuto2.CAMERA_SCALE_FACTOR;
-    }
 
-    public abstract DiscreteCoordinates getPlayerSpawnPosition();
+
 
 
     public boolean begin(Window window, FileSystem fileSystem) {
@@ -40,7 +39,7 @@ public abstract class ICRogueRoom extends Area {
             // Set the behavior map
             behavior = new ICRogueBehavior(window, behaviorName);
             setBehavior(behavior);
-            createLevel();
+            createArea();
             return true;
         }
         return false;
