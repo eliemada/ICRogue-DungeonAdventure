@@ -6,9 +6,9 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Staff extends Item{
-    public Staff(Area area, Orientation orientation, DiscreteCoordinates position, Sprite givenSprite) {
-        super(area, orientation, position,givenSprite);
-        sprite.setParent(this);
+    public Staff(Area area, Orientation orientation, DiscreteCoordinates position) {
+        super(area, orientation, position);
+        setSprite(new Sprite("zelda/staff_water.icon", .5f, .5f, this));
 
     }
 
