@@ -13,14 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Item extends CollectableAreaEntity {
-    Sprite sprite;
+    private Sprite sprite;
     public Item(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-    }
-    public Item(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite,
-                boolean isCollected) {
-        super(area, orientation, position,isCollected);
-        sprite = givenSprite;
     }
 
     protected void setSprite(Sprite givenSprite){

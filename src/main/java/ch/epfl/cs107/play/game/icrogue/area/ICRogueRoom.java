@@ -1,23 +1,31 @@
 package ch.epfl.cs107.play.game.icrogue.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
-import ch.epfl.cs107.play.game.tutosSolution.Tuto2;
-import ch.epfl.cs107.play.game.tutosSolution.Tuto2Behavior;
+import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
+import java.util.ArrayList;
 
 public abstract class ICRogueRoom extends Area {
 
     private ICRogueBehavior behavior;
     private String behaviorName;
     private DiscreteCoordinates roomCoordinates;
+    private ArrayList<Connector> roomConnectors = new ArrayList<>();
+    private Keyboard keyboard;
 
-    public ICRogueRoom(String givenBehaviorName, DiscreteCoordinates givenRoomCoordinates){
+    public ICRogueRoom(ArrayList<DiscreteCoordinates> connectorsCoordinates, ArrayList<Orientation> orientations,
+                       String givenBehaviorName, DiscreteCoordinates givenRoomCoordinates){
         behaviorName = givenBehaviorName;
         roomCoordinates = givenRoomCoordinates;
+        for (int i = 0; i < connectorsCoordinates.size(); i++){
+            roomConnectors.add(new Connector(this, orientations.get(i), connectorsCoordinates.get(i)));
+        }
+
     }
 
     /**
@@ -26,7 +34,9 @@ public abstract class ICRogueRoom extends Area {
      * Note it set the Behavior as needed !
      */
     protected void createArea(){
-
+        for (Connector connector : roomConnectors){
+            registerActor(connector);
+        }
     }
 
     /// EnigmeArea extends Area
@@ -41,12 +51,36 @@ public abstract class ICRogueRoom extends Area {
             behavior = new ICRogueBehavior(window, behaviorName);
             setBehavior(behavior);
             createArea();
+            keyboard = getKeyboard();
             return true;
         }
         return false;
     }
     public String getBehaviorName(){
         return behaviorName;
+    }
+
+    public void update(float deltaTime){
+        super.update(deltaTime);
+        if (keyboard.get(Keyboard.O).isPressed()){
+            for (Connector connector : roomConnectors){
+                connector.setState(Connector.State.OPEN);
+            }
+        }
+        if (keyboard.get(Keyboard.L).isPressed()){
+            roomConnectors.get(0).lockWithKey(1);
+        }
+        // switch state of all connectors on T keypress
+        if (keyboard.get(Keyboard.T).isPressed()){
+            for (Connector connector : roomConnectors){
+                if (connector.getState() == Connector.State.CLOSED){
+                    connector.setState(Connector.State.OPEN);
+                }
+                else if (connector.getState() == Connector.State.OPEN){
+                    connector.setState(Connector.State.CLOSED);
+                }
+            }
+        }
     }
 }
 
