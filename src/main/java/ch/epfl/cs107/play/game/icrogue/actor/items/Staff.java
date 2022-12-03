@@ -8,11 +8,15 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 public class Staff extends Item{
     public Staff(Area area, Orientation orientation, DiscreteCoordinates position, Sprite givenSprite) {
         super(area, orientation, position,givenSprite);
+        sprite.setParent(this);
+
     }
 
     public Staff(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite,
              boolean isCollected) {
         super(area, orientation, position,givenSprite,isCollected);
+        sprite.setParent(this);
+
     }
 
     @Override

@@ -10,10 +10,12 @@ public class Cherry extends Item{
 
     public Cherry(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite) {
         super(area, orientation, position,givenSprite);
+        sprite.setParent(this);
     }
 
     public Cherry(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite,boolean isCollected) {
         super(area, orientation, position,givenSprite,isCollected);
+        sprite.setParent(this);
     }
 
 }

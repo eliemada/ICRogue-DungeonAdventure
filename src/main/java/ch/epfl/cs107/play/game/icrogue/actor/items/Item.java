@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Item extends CollectableAreaEntity {
@@ -31,7 +32,7 @@ public abstract class Item extends CollectableAreaEntity {
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
-        return null;
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override
