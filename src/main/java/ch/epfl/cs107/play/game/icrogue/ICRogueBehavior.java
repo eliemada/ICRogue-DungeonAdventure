@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icrogue;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.game.tutosSolution.Tuto2Behavior;
 import ch.epfl.cs107.play.window.Window;
 
@@ -52,8 +53,13 @@ public class ICRogueBehavior extends AreaBehavior {
      * Cell adapted to the Tuto2 game
      */
     public class ICRogueCell extends AreaBehavior.Cell {
-        /// Type of the cell following the enum
         private final ICRogueCellType type;
+        public boolean is(ICRogueCellType type) {
+            return this.type == type;
+        }
+
+
+        /// Type of the cell following the enum
 
         /**
          * Default Tuto2Cell Constructor
@@ -74,8 +80,20 @@ public class ICRogueBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
+            if (!type.isWalkable) {
+                return false;
+            }
 
-            return type.isWalkable;
+            if (!entity.takeCellSpace()) {
+                return true;
+            }
+
+            for (Interactable interactable : entities) {
+                if (interactable.takeCellSpace()) {
+                    return false;
+                }
+            }
+            return true;
         }
 
 
@@ -91,6 +109,7 @@ public class ICRogueBehavior extends AreaBehavior {
 
         @Override
         public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+            ((ICRogueInteractionHandler) v).interactWith(this , isCellInteraction);
         }
 
     }

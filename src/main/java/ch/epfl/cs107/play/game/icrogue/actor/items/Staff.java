@@ -24,7 +24,10 @@ public class Staff extends Item{
     public boolean isViewInteractable() {
         return true;
     }
-
+    @Override
+    public boolean takeCellSpace() {
+        return true;
+    }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

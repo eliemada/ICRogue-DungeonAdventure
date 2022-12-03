@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -15,6 +16,8 @@ import java.util.List;
 
 public abstract class Projectile extends ICRogueActor implements Consumable, Interactor
 {
+    private ICRogueProjectileInteractionHandler handler;
+
     private final static int DEFAULT_MOVE_DURATION = 10;
     private final static int DEFAULT_DAMAGE = 1;
     //private final static boolean ISCONSUMED = false;
@@ -30,6 +33,8 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         damage = givenDamage;
         moveDuration = givenMoveduration;
         isConsumed = false;
+        handler = new ICRogueProjectileInteractionHandler();
+
     }
 
 
@@ -40,7 +45,9 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     }
 
     public void consume(){
+        getOwnerArea().unregisterActor(this);
         isConsumed = true;
+        System.out.println("I am here");
     }
 
     public boolean isConsumed(){
@@ -60,12 +67,12 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
 
     @Override
     public boolean wantsCellInteraction() {
-        return true;
+        return !isConsumed;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return true;
+        return !isConsumed;
     }
 
 
@@ -80,7 +87,7 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     }
     @Override
     public boolean isViewInteractable(){
-        return false;
+        return true;
     }
     @Override
     public abstract void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor,
@@ -90,8 +97,23 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
 
     public abstract void enterArea(Area area);
 
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction((ICRogueProjectileInteractionHandler)handler, isCellInteraction);
+    }
+
+    private class ICRogueProjectileInteractionHandler implements ICRogueInteractionHandler {
+        @Override
+        public void interactWith(ICRogueBehavior.ICRogueCell cell, boolean isCellInteraction) {
+            if (cell.is(ICRogueBehavior.ICRogueCellType.WALL) || cell.is(ICRogueBehavior.ICRogueCellType.HOLE)) {
+                acceptInteraction(this, isCellInteraction);
+                consume();
+                System.out.println(isConsumed());
+            }
+
+        }
 
 
-
+    }
 
 }

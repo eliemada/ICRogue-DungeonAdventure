@@ -11,10 +11,20 @@ import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 
 public interface ICRogueInteractionHandler extends AreaInteractionVisitor {
+    default void interactWith(ICRogueBehavior.ICRogueCell cell, boolean isCellInteraction) {
+    }
 
-    default void interactWith(ICRogueBehavior.ICRogueCell cell,boolean isCellInteraction) {}
-    default void interactWith(ICRoguePlayer player,  boolean isCellInteraction) {}
-    default void interactWith(Cherry cherry, boolean isCellInteraction) {}
-    default void interactWith(Staff staff, boolean isCellInteraction) {}
-    default void interactWith(Fire fireball, boolean isCellInteraction) {}
+    default void interactWith(ICRoguePlayer player, boolean isCellInteraction) {
+    }
+
+    default void interactWith(Cherry cherry, boolean isCellInteraction) {
+    }
+
+    default void interactWith(Staff staff, boolean isCellInteraction) {
+    }
+
+    default void interactWith(Fire fireBall, boolean isCellInteraction) {
+    }
+
+
 }
