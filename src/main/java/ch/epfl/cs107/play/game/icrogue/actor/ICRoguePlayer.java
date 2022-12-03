@@ -23,6 +23,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     private static final int ANIMATION_DURATION = 5;
     private final Keyboard keyboard;
+
+    private boolean isPickedup = false;
     //private final Sprite spriteUp,spriteDown,spriteRight,spriteLeft;
     private static final int MOVE_DURATION = 5;
     private Sprite [][] sprites = Sprite.extractSprites("zelda/player",
@@ -68,7 +70,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP),deltaTime);
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT),deltaTime);
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN),deltaTime);
-        if(keyboard.get(Keyboard.X).isPressed()){
+        if(keyboard.get(Keyboard.X).isPressed() && isPickedup){
             fireball = new Fire(getOwnerArea(), getOrientation(),
                     getCurrentMainCellCoordinates());
             fireball.enterArea(getOwnerArea());
@@ -165,6 +167,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             }
             if (wantsViewInteraction()){
                 getOwnerArea().unregisterActor(staff);
+                isPickedup = true;
             }
         }
     }
