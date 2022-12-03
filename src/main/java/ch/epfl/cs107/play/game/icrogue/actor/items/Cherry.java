@@ -15,7 +15,7 @@ public class Cherry extends Item{
 
     public Cherry(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite,boolean isCollected) {
         super(area, orientation, position,givenSprite,isCollected);
-        sprite.setParent(this);
+        setSprite(new Sprite("icrogue/cherry", 0.6f, 0.6f, this));
     }
 
 }
