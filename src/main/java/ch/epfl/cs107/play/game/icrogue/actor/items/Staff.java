@@ -14,12 +14,6 @@ public class Staff extends Item{
 
     }
 
-    public Staff(Area area, Orientation orientation, DiscreteCoordinates position,Sprite givenSprite,
-             boolean isCollected) {
-        super(area, orientation, position,givenSprite,isCollected);
-        setSprite(new Sprite("zelda/staff_water.icon", .5f, .5f, this));
-    }
-
     @Override
     public boolean isViewInteractable() {
         return true;
