@@ -1,11 +1,12 @@
 package ch.epfl.cs107.play.game.icrogue.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
+import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
@@ -17,7 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class ICRoguePlayer extends ICRogueActor {
+public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
 
     private static final int ANIMATION_DURATION = 5;
@@ -32,6 +33,7 @@ public class ICRoguePlayer extends ICRogueActor {
     private Animation[] animations =
             Animation.createAnimations( ANIMATION_DURATION /2, sprites );
     private Fire fireball;
+    private ICRogueInteractionHandler handler;
     public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
                          ) {
         super(room, orientation, position);
@@ -54,6 +56,7 @@ public class ICRoguePlayer extends ICRogueActor {
 
 
         keyboard = getOwnerArea().getKeyboard();
+        handler = new ICRoguePlayerInteractionHandler();
     }
 
 
@@ -106,6 +109,26 @@ public class ICRoguePlayer extends ICRogueActor {
     }
 
     @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return keyboard.get(keyboard.W).isPressed();
+    }
+
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction(handler,isCellInteraction);
+    }
+
+    @Override
     public boolean takeCellSpace() {
         return true;
     }
@@ -124,4 +147,27 @@ public class ICRoguePlayer extends ICRogueActor {
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
 
     }
+
+    private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
+        public void interactWith(Cherry cherry,boolean isCellInteraction){
+            if (cherry.isCellInteractable()){
+                acceptInteraction(this,isCellInteraction);
+            }
+            if (wantsCellInteraction()){
+                getOwnerArea().unregisterActor(cherry);
+            }
+
+        }
+
+        public void interactWith(Staff staff, boolean isCellInteraction){
+            if (staff.isCellInteractable()){
+                acceptInteraction(this,isCellInteraction);
+            }
+            if (wantsViewInteraction()){
+                getOwnerArea().unregisterActor(staff);
+            }
+        }
+    }
+
+
 }

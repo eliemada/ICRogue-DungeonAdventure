@@ -1,10 +1,12 @@
 package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
+import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
@@ -30,6 +32,7 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         isConsumed = false;
     }
 
+
     @Override
     public void update(float deltatime){
         super.update(deltatime);
@@ -51,6 +54,22 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     }
 
     @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return true;
+    }
+
+
+    @Override
     public boolean takeCellSpace(){
         return false;
     }
@@ -64,12 +83,15 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         return false;
     }
     @Override
-    public void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor,
-                                  boolean isCellInteraction){
-
-    }
+    public abstract void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor,
+                                  boolean isCellInteraction);
 
     public abstract void draw(Canvas canvas);
 
     public abstract void enterArea(Area area);
+
+
+
+
+
 }
