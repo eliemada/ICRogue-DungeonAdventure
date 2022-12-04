@@ -54,6 +54,13 @@ public class ICRogueBehavior extends AreaBehavior {
      */
     public class ICRogueCell extends AreaBehavior.Cell {
         private final ICRogueCellType type;
+
+        /**
+         * @author Elie BRUNO (elie.bruno@epfl.ch)
+         * @Brief Small method to check if the Cell type are equal
+         * @param type
+         * @return if the cells are equal, a boolean
+         */
         public boolean is(ICRogueCellType type) {
             return this.type == type;
         }

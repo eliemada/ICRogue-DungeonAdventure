@@ -12,8 +12,13 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Elie BRUNO (elie.bruno@epfl.ch)
+ * @author Sekuba
+ */
 public abstract class Item extends CollectableAreaEntity {
     private Sprite sprite;
+
     public Item(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
     }
@@ -22,6 +27,10 @@ public abstract class Item extends CollectableAreaEntity {
         sprite = givenSprite;
     }
 
+    /**
+     * @author Elie BRUNO (elie.bruno@epfl.ch)
+     * @param canvas target, not null
+     */
     @Override
     public void draw(Canvas canvas){
         if (!isCollected()){
