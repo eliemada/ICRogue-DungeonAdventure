@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icrogue.area.level0;
 
+import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0KeyRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
@@ -12,8 +13,8 @@ public class Level0 extends Level {
 
     public Level0() {
         super(new DiscreteCoordinates(2, 0), new DiscreteCoordinates(4, 2));
-        setStartingRoom(new DiscreteCoordinates(1, 0));
         generateFixedMap(new DiscreteCoordinates(4, 2));
+        setStartingRoom(new DiscreteCoordinates(1, 0));
     }
 
     private void generateMap1() {
@@ -56,6 +57,7 @@ public class Level0 extends Level {
 
     @Override
     protected void generateFixedMap(DiscreteCoordinates dimensionsMap) {
+        super.generateFixedMap(dimensionsMap);
         generateMap1();
         // generateMap2();
     }

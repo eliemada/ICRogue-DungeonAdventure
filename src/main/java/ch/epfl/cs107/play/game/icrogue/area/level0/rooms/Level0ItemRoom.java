@@ -6,7 +6,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 
 public abstract class Level0ItemRoom extends Level0Room {
-    private ArrayList<Item> items;
+    private ArrayList<Item> items = new ArrayList<>();
 
     public Level0ItemRoom(DiscreteCoordinates givenRoomCoordinates) {
         super(givenRoomCoordinates);

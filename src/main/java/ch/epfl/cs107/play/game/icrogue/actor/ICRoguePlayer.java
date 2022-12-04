@@ -170,6 +170,15 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 isPickedup = true;
             }
         }
+
+        // If the player is interacting remotely, it tries to unlock the connector (the connector
+        // changes from locked to open if the player is in possession of the associated key)
+        // If it is in touch/contact interaction and not moving
+        // (!isDisplacementOccurs()), it can transit to the destination of the connectors.
+        public void interactWith(Connector connector, boolean isCellInteraction){
+
+
+        }
     }
 
 
