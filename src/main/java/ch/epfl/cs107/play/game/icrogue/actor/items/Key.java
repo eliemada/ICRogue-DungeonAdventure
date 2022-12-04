@@ -20,7 +20,6 @@ public class Key extends Item{
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this,isCellInteraction);
-
     }
 
     public int getId() {

@@ -1,11 +1,6 @@
 package ch.epfl.cs107.play.game.icrogue.area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
-import ch.epfl.cs107.play.game.icrogue.actor.Connector;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Level {
     // TODO static or dynamic array?
@@ -42,13 +37,14 @@ public abstract class Level {
 
     protected void setRoomConnectorDestination(DiscreteCoordinates coords, String destination,
                                                ConnectorInRoom connector){
-        roomsMapped[coords.x][coords.y].getRoomConnectors()[connector.getIndex()].setDestArea(destination);
+        roomsMapped[coords.x][coords.y].getRoomConnectors()[connector.getIndex()].setDestination(destination, posArrival);
     }
 
     protected void setRoomConnector(DiscreteCoordinates coords, String destination,
                                     ConnectorInRoom connector){
         setRoomConnectorDestination(coords, destination, connector);
         roomsMapped[coords.x][coords.y].getRoomConnectors()[connector.getIndex()].close();
+
     }
 
     protected void lockRoomConnector(DiscreteCoordinates coords, ConnectorInRoom connector,

@@ -5,10 +5,12 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +28,11 @@ public class Connector extends AreaEntity {
     private Sprite spriteInvisible = new Sprite("icrogue/invisibleDoor_"+ getOrientation().ordinal(),
             (getOrientation().ordinal()+1)%2+1, getOrientation().ordinal()%2+1, this);
 
+    public void openWithKey(ArrayList<Integer> keyIds) {
+        if (state == State.CLOSED || (keyIds.size() > 0 && keyIds.contains(keyId)))
+            state = State.OPEN;
+    }
+
     public static enum State {
         OPEN, CLOSED, LOCKED, INVISIBLE
     }
@@ -41,11 +48,16 @@ public class Connector extends AreaEntity {
 
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-        state = State.CLOSED;
+        state = State.INVISIBLE;
     }
 
-    public void setDestArea(String destArea) {
+    public void setDestination(String destArea, DiscreteCoordinates destCoords) {
         this.destArea = destArea;
+        this.destCoords = destCoords;
+    }
+
+    public String getDestArea() {
+        return destArea;
     }
 
     public void lockWithKey(int keyId) {
@@ -121,7 +133,7 @@ public class Connector extends AreaEntity {
      */
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return state == State.OPEN;
     }
 
     /**
@@ -140,6 +152,6 @@ public class Connector extends AreaEntity {
      */
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-
+        ((ICRogueInteractionHandler) v).interactWith(this,isCellInteraction);
     }
 }

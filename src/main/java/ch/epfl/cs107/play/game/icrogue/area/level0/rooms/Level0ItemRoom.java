@@ -12,7 +12,13 @@ public abstract class Level0ItemRoom extends Level0Room {
         super(givenRoomCoordinates);
     }
 
-    public void addItem(Item item){
+    protected void addItem(Item item){
         items.add(item);
+    }
+
+    @Override
+    protected void createArea() {
+        super.createArea();
+        for (Item item : items) registerActor(item);
     }
 }

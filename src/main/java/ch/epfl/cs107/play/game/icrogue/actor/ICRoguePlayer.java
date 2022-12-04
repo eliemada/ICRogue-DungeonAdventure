@@ -4,17 +4,16 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RegionOfInterest;
-import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,9 +23,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private static final int ANIMATION_DURATION = 5;
     private final Keyboard keyboard;
 
-    private boolean isPickedup = false;
-    //private final Sprite spriteUp,spriteDown,spriteRight,spriteLeft;
+    private boolean hasStaff = false;
+    private ArrayList<Integer> keyIds = new ArrayList<>();
     private static final int MOVE_DURATION = 5;
+    private boolean isBetweenRooms = false;
+    private String destArea;
     private Sprite [][] sprites = Sprite.extractSprites("zelda/player",
             4, 1, 2,
             this , 16, 32, new Orientation [] { Orientation .DOWN ,
@@ -39,28 +40,23 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
                          ) {
         super(room, orientation, position);
-       /* XXX
-            Useful before the implementation of the animations !
-
-          //bas
-       spriteDown = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32),
-                    new Vector(0,0));
-            //haut
-        spriteUp = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32),
-                    new Vector(0,0));
-            //droite
-        spriteRight = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32),
-                    new Vector(0,0));
-        //gauche
-        spriteLeft = new Sprite("zelda/player", .75f,1.5f,this,new RegionOfInterest(0,96,16,32),
-                new Vector(0,0));
-        */
-
-
         keyboard = getOwnerArea().getKeyboard();
         handler = new ICRoguePlayerInteractionHandler();
     }
 
+    public boolean isBetweenRooms() {
+        return isBetweenRooms;
+    }
+
+    public String getDestArea() {
+        return destArea;
+    }
+
+    @Override
+    public void enterArea(Area area, DiscreteCoordinates position){
+        super.enterArea(area, position);
+        isBetweenRooms = false;
+    }
 
     @Override
     public void update(float deltaTime){
@@ -70,13 +66,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP),deltaTime);
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT),deltaTime);
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN),deltaTime);
-        if(keyboard.get(Keyboard.X).isPressed() && isPickedup){
+        if(keyboard.get(Keyboard.X).isPressed() && hasStaff){
             fireball = new Fire(getOwnerArea(), getOrientation(),
                     getCurrentMainCellCoordinates());
             fireball.enterArea(getOwnerArea());
         }
-
-        //TODO next time need to add the fireball when X is pressed
     }
 
     private void ifKeyIsPressed(Button pressedKey){
@@ -156,9 +150,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 acceptInteraction(this,isCellInteraction);
             }
             if (wantsCellInteraction()){
-                getOwnerArea().unregisterActor(cherry);
+                cherry.collect();
             }
-
         }
 
         public void interactWith(Staff staff, boolean isCellInteraction){
@@ -166,8 +159,18 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 acceptInteraction(this,isCellInteraction);
             }
             if (wantsViewInteraction()){
-                getOwnerArea().unregisterActor(staff);
-                isPickedup = true;
+                staff.collect();
+                hasStaff = true;
+            }
+        }
+
+        public void interactWith(Key key, boolean isCellInteraction){
+            if (key.isCellInteractable()){
+                acceptInteraction(this,isCellInteraction);
+            }
+            if (wantsCellInteraction()){
+                key.collect();
+                keyIds.add(key.getId());
             }
         }
 
@@ -176,7 +179,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         // If it is in touch/contact interaction and not moving
         // (!isDisplacementOccurs()), it can transit to the destination of the connectors.
         public void interactWith(Connector connector, boolean isCellInteraction){
-
+            if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
+            if (wantsViewInteraction()){
+                connector.openWithKey(keyIds);
+            } else if (wantsCellInteraction() && !isDisplacementOccurs()){
+                isBetweenRooms = true;
+                destArea = connector.getDestArea();
+                leaveArea();
+            }
 
         }
     }

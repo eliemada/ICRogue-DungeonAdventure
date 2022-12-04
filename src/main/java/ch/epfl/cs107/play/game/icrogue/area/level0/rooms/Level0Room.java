@@ -16,13 +16,13 @@ public class Level0Room extends ICRogueRoom{
     public enum Level0Connectors implements ConnectorInRoom {
         // ordre des attributs: position , destination , orientation
         W(new DiscreteCoordinates(0, 4),
-                new DiscreteCoordinates(8, 5), Orientation.LEFT),
+                new DiscreteCoordinates(8, 5), Orientation.RIGHT),
         S(new DiscreteCoordinates(4, 0),
-                new DiscreteCoordinates(5, 8), Orientation.DOWN),
+                new DiscreteCoordinates(5, 8), Orientation.UP),
         E(new DiscreteCoordinates(9, 4),
-                new DiscreteCoordinates(1, 5), Orientation.RIGHT),
+                new DiscreteCoordinates(1, 5), Orientation.LEFT),
         N(new DiscreteCoordinates(4, 9),
-                new DiscreteCoordinates(5, 1), Orientation.UP);
+                new DiscreteCoordinates(5, 1), Orientation.DOWN);
 
         private final DiscreteCoordinates position;
         private final DiscreteCoordinates destination;
@@ -63,7 +63,7 @@ public class Level0Room extends ICRogueRoom{
 
     public Level0Room(DiscreteCoordinates givenRoomCoordinates) {
         super(Level0Connectors.getAllConnectorsPosition(), Level0Connectors.getAllConnectorsOrientation(),"icrogue/Level0Room",givenRoomCoordinates);
-        title = "icrogue/Level0Room"+givenRoomCoordinates.x+givenRoomCoordinates.y;
+        title = "icrogue/level0"+givenRoomCoordinates.x+givenRoomCoordinates.y;
     }
 
     public final float getCameraScaleFactor() {
@@ -79,7 +79,8 @@ public class Level0Room extends ICRogueRoom{
     protected void createArea() {
         super.createArea();
         registerActor(new Background(this,getBehaviorName() ));
-        registerActor(new Cherry(this, Orientation.DOWN,new DiscreteCoordinates(6,3)));
-        registerActor(new Staff(this, Orientation.DOWN,new DiscreteCoordinates(4,3)));
+        // TODO remove these manually added items later
+//        registerActor(new Cherry(this, Orientation.DOWN,new DiscreteCoordinates(6,3)));
+//        registerActor(new Staff(this, Orientation.DOWN,new DiscreteCoordinates(4,3)));
     }
 }

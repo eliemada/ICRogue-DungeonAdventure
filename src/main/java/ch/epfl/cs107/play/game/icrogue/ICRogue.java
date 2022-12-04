@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 
+import ch.epfl.cs107.play.game.tutosSolution.area.Tuto2Area;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -26,13 +27,19 @@ public class ICRogue extends AreaGame {
     private void initLevel() {
         currentLevel = new Level0();
         currentLevel.registerRooms(this);
+        // TODO what does forceBegin mean?
         setCurrentArea(currentLevel.getTitleStartRoom(), false);
-        DiscreteCoordinates coords = new DiscreteCoordinates(2, 2);
+        DiscreteCoordinates coords = new DiscreteCoordinates(2, 3);
         player = new ICRoguePlayer(getCurrentArea(), Orientation.UP, coords);
         player.enterArea(getCurrentArea(), coords);
         keyboard= getCurrentArea().getKeyboard();
     }
 
+    private void switchRoom() {
+        // TODO find better way to hand down destArea and coords from connector to ICRogue
+        setCurrentArea(player.getDestArea(), false);
+        player.enterArea(getCurrentArea(), new DiscreteCoordinates(2, 3));
+    }
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
@@ -50,9 +57,9 @@ public class ICRogue extends AreaGame {
             player.leaveArea();
             initLevel();
         }
-
-
-
+        if (player.isBetweenRooms()) {
+            switchRoom();
+        }
     }
 
     @Override
