@@ -44,16 +44,24 @@ public class Connector extends AreaEntity {
         state = State.CLOSED;
     }
 
+    public void setDestArea(String destArea) {
+        this.destArea = destArea;
+    }
+
     public void lockWithKey(int keyId) {
         this.keyId = keyId;
         state = State.LOCKED;
+    }
+
+    public void close() {
+        state = State.CLOSED;
     }
 
     public State getState() {
         return state;
     }
 
-    //TODO make this obsolete by more granulat setters
+    //TODO make this obsolete by more granular setters
     public void setState(State state) {
         this.state = state;
     }

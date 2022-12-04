@@ -15,17 +15,21 @@ public abstract class ICRogueRoom extends Area {
     private ICRogueBehavior behavior;
     private String behaviorName;
     private DiscreteCoordinates roomCoordinates;
-    private ArrayList<Connector> roomConnectors = new ArrayList<>();
+    private Connector[] roomConnectors = new Connector[4];
     private Keyboard keyboard;
 
     public ICRogueRoom(ArrayList<DiscreteCoordinates> connectorsCoordinates, ArrayList<Orientation> orientations,
                        String givenBehaviorName, DiscreteCoordinates givenRoomCoordinates){
         behaviorName = givenBehaviorName;
         roomCoordinates = givenRoomCoordinates;
-        for (int i = 0; i < connectorsCoordinates.size(); i++){
-            roomConnectors.add(new Connector(this, orientations.get(i), connectorsCoordinates.get(i)));
+        for (int i = 0; i < roomConnectors.length; i++){
+            roomConnectors[i] = new Connector(this, orientations.get(i), connectorsCoordinates.get(i));
         }
 
+    }
+
+    public Connector[] getRoomConnectors(){
+        return roomConnectors;
     }
 
     /**
@@ -68,9 +72,9 @@ public abstract class ICRogueRoom extends Area {
             }
         }
         if (keyboard.get(Keyboard.L).isPressed()){
-            roomConnectors.get(0).lockWithKey(1);
+            roomConnectors[0].lockWithKey(1);
         }
-        // switch state of all connectors on T keypress
+
         if (keyboard.get(Keyboard.T).isPressed()){
             for (Connector connector : roomConnectors){
                 if (connector.getState() == Connector.State.CLOSED){
