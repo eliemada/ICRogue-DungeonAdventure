@@ -32,14 +32,25 @@ public class Level0EnemyRoom extends Level0Room implements Logic {
         }
     }
 
+
+    private boolean enemyStillAlive(){
+        boolean check = true;
+        for(Enemies enemy : enemies){
+            if(enemy.isAlive()){
+                check = false;
+            }
+        }
+        return check;
+    }
+
     @Override
     public boolean isOn() {
-        return enemies.size()==0;
+        return super.isOn() && enemyStillAlive();
     }
 
     @Override
     public boolean isOff() {
         return !isOn();
     }
-
 }
+

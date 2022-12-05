@@ -1,18 +1,24 @@
 package ch.epfl.cs107.play.game.icrogue.actor;
 
+import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
+import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Arrow;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
+import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Projectile;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,28 +27,47 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     private static final int ANIMATION_DURATION = 5;
     private final Keyboard keyboard;
+    private     float        healthPoints;
+    private TextGraphics shownHp;
 
+    private Sprite[][] copain;
     private boolean hasStaff = false;
     private ArrayList<Integer> keyIds = new ArrayList<>();
     private static final int MOVE_DURATION = 5;
     private boolean isBetweenRooms = false;
     private String destArea;
-    private Sprite [][] sprites = Sprite.extractSprites("zelda/player",
-            4, 1, 2,
-            this , 16, 32, new Orientation [] { Orientation .DOWN ,
-                    Orientation .RIGHT , Orientation .UP , Orientation . LEFT });
+    private Sprite [][] sprites;
     // crée un tableau de 4 animation
-    private Animation[] animations =
-            Animation.createAnimations( ANIMATION_DURATION /2, sprites );
-    private Fire fireball;
+    private Animation[] animationsCopain;
+    private Animation[] animationsMainPlayer;
+    private Fire        fireball;
+    private Sprite shadow;
     private ICRogueInteractionHandler handler;
     public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
                          ) {
         super(room, orientation, position);
+        healthPoints = 10;
+        shownHp = new TextGraphics(Integer.toString((int)healthPoints), 0.6f, Color.RED);
+        shownHp.setParent(this);
+        shownHp.setAnchor(new Vector(0.3f, 2.1f));
         keyboard = getOwnerArea().getKeyboard();
         handler = new ICRoguePlayerInteractionHandler();
+        /*copain = Sprite.extractSprites("boy.1",4, 0.5f, 0.65625f, this,16,16,new Vector(0,-0.33f),
+                new Orientation [] { Orientation .DOWN ,
+                Orientation .RIGHT , Orientation .UP , Orientation . LEFT }); */
+        sprites = Sprite.extractSprites("zelda/player",
+                4, 1, 2,
+                this , 16, 32, new Orientation [] { Orientation .DOWN ,
+                        Orientation .RIGHT , Orientation .UP , Orientation . LEFT });
+        animationsMainPlayer =
+        Animation.createAnimations( ANIMATION_DURATION /2, sprites );
+        //animationsCopain = Animation.createAnimations( ANIMATION_DURATION /2, copain );
+        shadow = new Sprite("shadow",1,1,this,new RegionOfInterest(0,0,16,16),new Vector(0,-0.1f));
     }
 
+    public boolean isAlive(){
+        return !(healthPoints <= 0);
+    }
     public boolean isBetweenRooms() {
         return isBetweenRooms;
     }
@@ -62,6 +87,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     @Override
     public void update(float deltaTime){
         super.update(deltaTime);
+        if (isAlive()) {
+            shownHp.setText(Integer.toString((int)healthPoints));
+        }
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT),deltaTime);
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP),deltaTime);
@@ -74,6 +102,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
     }
 
+    private void touched(Projectile projectile){
+        healthPoints -= projectile.getDamage();
+    }
     private void ifKeyIsPressed(Button pressedKey){
 
     }
@@ -82,7 +113,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             if (!isDisplacementOccurs()) {
                 orientate(orientation);
                 move(MOVE_DURATION);
-                animations[getOrientation().ordinal()].update(deltatime);
+                animationsMainPlayer[getOrientation().ordinal()].update(deltatime);
+                //animationsCopain[getOrientation().ordinal()].update(deltatime);
             }
 
         }
@@ -90,12 +122,26 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     @Override
     public void draw(Canvas canvas) {
+        shadow.draw(canvas);
         switch (getOrientation()) {
-            case UP -> animations[Orientation.UP.ordinal()].draw(canvas);
-            case DOWN -> animations[Orientation.DOWN.ordinal()].draw(canvas);
-            case LEFT ->  animations[Orientation.LEFT.ordinal()].draw(canvas);
-            case RIGHT -> animations[Orientation.RIGHT.ordinal()].draw(canvas);
+            case UP :
+                animationsMainPlayer[Orientation.UP.ordinal()].draw(canvas);
+                //animationsCopain[Orientation.UP.ordinal()].draw(canvas);
+                break;
+            case DOWN :
+                animationsMainPlayer[Orientation.DOWN.ordinal()].draw(canvas);
+                //animationsCopain[Orientation.DOWN.ordinal()].draw(canvas);
+                break;
+            case LEFT :
+                animationsMainPlayer[Orientation.LEFT.ordinal()].draw(canvas);
+                //animationsCopain[Orientation.LEFT.ordinal()].draw(canvas);
+                break;
+            case RIGHT:
+                animationsMainPlayer[Orientation.RIGHT.ordinal()].draw(canvas);
+                //animationsCopain[Orientation.RIGHT.ordinal()].draw(canvas);
+                break;
         }
+        shownHp.draw(canvas);
     }
 
 
@@ -189,6 +235,22 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 leaveArea();
             }
 
+        }
+
+        /**
+         * @Brief Small method to allow the player to interact with the arrow, It allows us to only receive
+         * damage once from the arrow because if you don't check that the arrow is not consumed, you could
+         * try to make the arrow unregister multiple times which would lead to multiple errors and only
+         * take damage once from the arrow.
+         * @param arrow
+         * @param isCellInteraction
+         */
+        public void interactWith(Arrow arrow, boolean isCellInteraction){
+
+            if(isCellInteraction && !arrow.isConsumed()){
+                touched(arrow);
+                arrow.consume();
+            }
         }
     }
 

@@ -39,7 +39,9 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         handler = new ICRogueProjectileInteractionHandler();
 
     }
-
+    public int getDamage(){
+        return damage;
+    }
 
     @Override
     public void update(float deltatime){
@@ -48,8 +50,10 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     }
 
     public void consume(){
+        if (!isConsumed){
         getOwnerArea().unregisterActor(this);
-        isConsumed = true;
+        isConsumed = true;}
+
     }
 
     public boolean isConsumed(){

@@ -26,6 +26,11 @@ public class Fire extends Projectile {
     private static final int ANIMATION_DURATION    = 5;
 
     private int damage, duration;
+    private Sprite [] sprites = Sprite.extractSprites("zelda/fire",
+            7, 1, 1,
+            this , 16, 16);
+    Animation animation = new Animation(3,sprites);
+
     Sprite spriteFire;
     //Sprite myBall;
     //private Sprite fireAnimated[] = new Sprite[7];
@@ -71,6 +76,7 @@ public class Fire extends Projectile {
     @Override
     public void update(float deltatime){
         super.update(deltatime);
+        animation.update(deltatime);
     }
 
     /**
@@ -79,7 +85,7 @@ public class Fire extends Projectile {
      * @param canvas target, not null
      */
     public void draw(Canvas canvas) {
-        spriteFire.draw(canvas);
+        animation.draw(canvas);
     }
 
 

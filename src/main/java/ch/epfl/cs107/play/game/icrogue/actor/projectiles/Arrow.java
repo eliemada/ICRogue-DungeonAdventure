@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Arrow extends Projectile{
     //Sprite sprite;
     public Arrow(Area room, Orientation orientation, DiscreteCoordinates position) {
-        super(room, orientation, position);
+        super(room, orientation, position,5,10);
         setSprite(new Sprite("zelda/arrow", 1f, 1f, this ,
                 new RegionOfInterest(32 * orientation.ordinal(), 0, 32, 32),
                 new Vector(0, 0)));

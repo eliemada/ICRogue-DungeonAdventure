@@ -1,8 +1,9 @@
 package ch.epfl.cs107.play.game.icrogue.area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 
-public abstract class Level {
+public abstract class Level implements Logic {
     // TODO static or dynamic array?
     private ICRogueRoom roomsMapped[][];
 
@@ -10,6 +11,20 @@ public abstract class Level {
     private DiscreteCoordinates posBossRoom;
     private String titleStartRoom;
 
+    @Override
+    public boolean isOn() {
+        return roomsMapped[posArrival.x][posBossRoom.y].isOn();
+    }
+
+    @Override
+    public boolean isOff() {
+        return roomsMapped[posBossRoom.x][posBossRoom.y].isOff();
+    }
+
+    @Override
+    public float getIntensity() {
+        return 1.0f;
+    }
 
     public Level(DiscreteCoordinates posArrival, DiscreteCoordinates dimensionsMap) {
         this.posArrival = posArrival;
@@ -56,4 +71,5 @@ public abstract class Level {
     protected void setStartingRoom(DiscreteCoordinates coords){
         titleStartRoom = roomsMapped[coords.x][coords.y].getTitle();
     }
+
 }

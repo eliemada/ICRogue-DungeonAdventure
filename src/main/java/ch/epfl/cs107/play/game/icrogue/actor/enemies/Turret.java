@@ -63,9 +63,7 @@ public class Turret extends Enemies implements Interactor {
         sprite.draw(canvas);
     }
 
-    public void Consume() {
-        getOwnerArea().unregisterActor(this);
-    }
+
 
 
     @Override
