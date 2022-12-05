@@ -47,6 +47,9 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
     /// - start indicate if area already begins, paused indicate if we display the pause menu
     private boolean started, paused;
     private AreaPauseMenu menu;
+    private boolean isInRoom = false;
+
+
 
 
     /** @return (float): camera scale factor, assume it is the same in x and y direction */
@@ -61,7 +64,6 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
         this.areaBehavior = ab;
     }
 
-    private boolean isInRoom = false;
 
     /**
      * Setter for the view Candidate

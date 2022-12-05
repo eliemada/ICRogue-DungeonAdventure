@@ -6,11 +6,12 @@ import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import java.util.ArrayList;
 
-public abstract class ICRogueRoom extends Area {
+public abstract class ICRogueRoom extends Area implements Logic {
 
     private ICRogueBehavior behavior;
     private String behaviorName;
@@ -83,6 +84,25 @@ public abstract class ICRogueRoom extends Area {
                     connector.setState(Connector.State.CLOSED);
                 }
             }
+        }
+    }
+
+    @Override
+    public boolean isOn() {
+        return getIsInRoom();
+    }
+
+    @Override
+    public boolean isOff() {
+        return !getIsInRoom();
+    }
+
+    @Override
+    public float getIntensity() {
+        if(getIsInRoom()) {
+            return 0.0f;
+        } else {
+            return 1.0f;
         }
     }
 }
