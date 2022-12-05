@@ -61,6 +61,8 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
         this.areaBehavior = ab;
     }
 
+    private boolean isInRoom = false;
+
     /**
      * Setter for the view Candidate
      * @param a (Actor), not null
@@ -93,6 +95,13 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
             removeActor(a, true);
         }
     }
+    public void setIsInRoom(boolean given){
+        isInRoom = given;
+    }
+    public boolean getIsInRoom(){
+        return isInRoom;
+    }
+
 
     /**
      * Remove an actor form the actor list

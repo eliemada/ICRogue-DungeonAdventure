@@ -48,7 +48,6 @@ public abstract class ICRogueRoom extends Area {
 
 
 
-
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             // Set the behavior map

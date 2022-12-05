@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
-
     private static final int ANIMATION_DURATION = 5;
     private final Keyboard keyboard;
 
@@ -56,6 +55,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     public void enterArea(Area area, DiscreteCoordinates position){
         super.enterArea(area, position);
         isBetweenRooms = false;
+        //Put the boolean here
+        area.setIsInRoom(true);
     }
 
     @Override

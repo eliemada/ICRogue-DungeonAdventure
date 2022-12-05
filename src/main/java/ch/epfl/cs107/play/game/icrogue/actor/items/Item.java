@@ -17,6 +17,8 @@ import java.util.List;
  * @author Sekuba
  */
 public abstract class Item extends CollectableAreaEntity {
+
+    private Boolean isPickedUp = false;
     private Sprite sprite;
 
     public Item(Area area, Orientation orientation, DiscreteCoordinates position) {
@@ -37,6 +39,7 @@ public abstract class Item extends CollectableAreaEntity {
             sprite.draw(canvas);
         }
     }
+
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {

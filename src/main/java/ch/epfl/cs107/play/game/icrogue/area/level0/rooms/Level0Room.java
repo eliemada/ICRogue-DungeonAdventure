@@ -79,7 +79,7 @@ public class Level0Room extends ICRogueRoom{
     protected void createArea() {
         super.createArea();
         registerActor(new Background(this,getBehaviorName() ));
-        // TODO remove these manually added items later
+        //TODO remove these manually added items later
 //        registerActor(new Cherry(this, Orientation.DOWN,new DiscreteCoordinates(6,3)));
 //        registerActor(new Staff(this, Orientation.DOWN,new DiscreteCoordinates(4,3)));
     }
