@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 
 public abstract class Level0ItemRoom extends Level0Room {
+    private boolean solved = false;
     private ArrayList<Item> items = new ArrayList<>();
 
     public Level0ItemRoom(DiscreteCoordinates givenRoomCoordinates) {
@@ -15,10 +16,12 @@ public abstract class Level0ItemRoom extends Level0Room {
     protected void addItem(Item item){
         items.add(item);
     }
-
     @Override
     protected void createArea() {
         super.createArea();
-        for (Item item : items) registerActor(item);
+        for (Item item : items){
+            registerActor(item);
+            solved = item.isCollected();
+        }
     }
 }
