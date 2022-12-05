@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
@@ -23,6 +24,8 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     //private final static boolean ISCONSUMED = false;
     private int moveDuration,damage;
     private boolean isConsumed;
+    private Sprite sprite;
+
 
     public Projectile(Area room, Orientation orientation, DiscreteCoordinates position) {
         this(room, orientation, position,DEFAULT_DAMAGE,DEFAULT_MOVE_DURATION);
@@ -47,7 +50,6 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     public void consume(){
         getOwnerArea().unregisterActor(this);
         isConsumed = true;
-        System.out.println("I am here");
     }
 
     public boolean isConsumed(){
@@ -93,9 +95,14 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     public abstract void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor,
                                   boolean isCellInteraction);
 
-    public abstract void draw(Canvas canvas);
+    public void draw(Canvas canvas){
+        sprite.draw(canvas);
+    };
 
-    public abstract void enterArea(Area area);
+    protected void setSprite(Sprite givenSprite){
+        sprite = givenSprite;
+    }
+
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
@@ -108,7 +115,6 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
             if (cell.is(ICRogueBehavior.ICRogueCellType.WALL) || cell.is(ICRogueBehavior.ICRogueCellType.HOLE)) {
                 acceptInteraction(this, isCellInteraction);
                 consume();
-                System.out.println(isConsumed());
             }
 
         }

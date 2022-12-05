@@ -88,9 +88,7 @@ public class Fire extends Projectile {
      * @Brief Method to register the fireball on the area.
      * @param area
      */
-    public void enterArea(Area area){
-        area.registerActor(this);
-    }
+
 
     /**
      * @author Elie BRUNO (elie.bruno@epfl.ch)

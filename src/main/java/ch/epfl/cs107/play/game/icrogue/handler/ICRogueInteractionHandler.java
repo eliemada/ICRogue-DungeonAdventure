@@ -7,9 +7,11 @@ import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
+import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
+import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Arrow;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 
 public interface ICRogueInteractionHandler extends AreaInteractionVisitor {
@@ -21,6 +23,11 @@ public interface ICRogueInteractionHandler extends AreaInteractionVisitor {
 
     default void interactWith(Cherry cherry, boolean isCellInteraction) {
     }
+    default void interactWith(Arrow arrow, boolean isCellInteraction) {
+    }
+    default void interactWith(Turret turret, boolean isCellInteraction) {
+    }
+
 
     default void interactWith(Staff staff, boolean isCellInteraction) {
     }

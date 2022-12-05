@@ -24,4 +24,14 @@ public abstract class Level0ItemRoom extends Level0Room {
             solved = item.isCollected();
         }
     }
+
+    @Override
+    public boolean isOn() {
+        return super.isOn() && solved;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
+    }
 }

@@ -10,6 +10,7 @@ public abstract class Level {
     private DiscreteCoordinates posBossRoom;
     private String titleStartRoom;
 
+
     public Level(DiscreteCoordinates posArrival, DiscreteCoordinates dimensionsMap) {
         this.posArrival = posArrival;
         this.posBossRoom = new DiscreteCoordinates(0, 0);

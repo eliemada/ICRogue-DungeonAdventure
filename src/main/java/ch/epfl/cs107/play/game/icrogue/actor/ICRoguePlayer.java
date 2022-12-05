@@ -70,7 +70,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         if(keyboard.get(Keyboard.X).isPressed() && hasStaff){
             fireball = new Fire(getOwnerArea(), getOrientation(),
                     getCurrentMainCellCoordinates());
-            fireball.enterArea(getOwnerArea());
+            fireball.enterArea(getOwnerArea(),getCurrentMainCellCoordinates());
         }
     }
 
@@ -142,7 +142,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-
+        ((ICRogueInteractionHandler) v).interactWith(this , isCellInteraction);
     }
 
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
