@@ -23,9 +23,11 @@ public abstract class ICRogueRoom extends Area implements Logic {
     private boolean wasOn = false;
 
     public ICRogueRoom(ArrayList<DiscreteCoordinates> connectorsCoordinates, ArrayList<Orientation> orientations,
-                       String givenBehaviorName, DiscreteCoordinates givenRoomCoordinates){
+                       String givenBehaviorName, DiscreteCoordinates givenRoomCoordinates) {
+
         behaviorName = givenBehaviorName;
         roomCoordinates = givenRoomCoordinates;
+
         for (int i = 0; i < roomConnectors.length; i++){
             // connectorInRoom has the opposite orientation of Connector (important for the sprite)
             roomConnectors[i] = new Connector(this, orientations.get(i).opposite(), connectorsCoordinates.get(i));

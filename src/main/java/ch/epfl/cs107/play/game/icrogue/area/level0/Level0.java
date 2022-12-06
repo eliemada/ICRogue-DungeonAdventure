@@ -12,9 +12,8 @@ public class Level0 extends Level {
     private final int BOSS_KEY_ID = 3;
 
     public Level0() {
-        // TODO make posArrival dynamic? (pas dans l'énnoncé)
-        super(new DiscreteCoordinates(2, 3), new DiscreteCoordinates(4, 2));
-        generateFixedMap(new DiscreteCoordinates(4, 2));
+        super(new DiscreteCoordinates(0, 0), 4, 2);
+        generateMap2();
         setStartingRoom(new DiscreteCoordinates(0, 0));
     }
 
@@ -54,13 +53,5 @@ public class Level0 extends Level {
         DiscreteCoordinates room11 = new DiscreteCoordinates(1, 1);
         setRoom(room11, new Level0Room(room11));
         setRoomConnector(room11, "icrogue/level010", Level0Room.Level0Connectors.N);
-    }
-
-    @Override
-    protected void generateFixedMap(DiscreteCoordinates dimensionsMap) {
-        super.generateFixedMap(dimensionsMap);
-        //  TODO delete these testLvls
-//        generateMap1();
-         generateMap2();
     }
 }
