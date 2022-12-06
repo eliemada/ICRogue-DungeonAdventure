@@ -14,7 +14,7 @@ public class Level0 extends Level {
     public Level0() {
         super(new DiscreteCoordinates(0, 0), 4, 2);
         generateMap2();
-        setStartingRoom(new DiscreteCoordinates(0, 0));
+        setStartingRoom(new DiscreteCoordinates(1, 1));
     }
 
     private void generateMap1() {
