@@ -45,7 +45,6 @@ public abstract class Level implements Logic {
                 for (int y = 0; y < mappedRooms[x].length; y++)
                     if ((mappedRooms[x][y] == MapState.PLACED) || (mappedRooms[x][y] == MapState.EXPLORED))
                         potentialMapIndexes.add(new DiscreteCoordinates(x, y));
-
             for (DiscreteCoordinates position : RandomHelper.chooseKInList(roomsDistribution[i], potentialMapIndexes)) {
                 createRoom(i, position);
                 mappedRooms[position.x][position.y] = MapState.CREATED;
@@ -55,20 +54,18 @@ public abstract class Level implements Logic {
 
     protected abstract void createRoom(int type, DiscreteCoordinates position);
 
-    protected MapState [][] generateRandomRoomPlacement(int[] roomsDistribution, int nbRooms) {
-        MapState[][] roomPlacementMap = new MapState[nbRooms][nbRooms];
-        int roomsToPlace = nbRooms;
+    protected MapState [][] generateRandomRoomPlacement(int[] roomsDistribution, int rommsToPlace) {
+        MapState[][] roomPlacementMap = new MapState[rommsToPlace][rommsToPlace];
 
         // initialize map
-        for (MapState[] row : roomPlacementMap) {
-            for (MapState cell : row) {
-                cell = MapState.NULL;
-                roomsToPlace--;
+        for (int i = 0; i < roomPlacementMap.length; i++) {
+            for (int j = 0; j < roomPlacementMap[i].length; j++) {
+                roomPlacementMap[i][j] = MapState.NULL;
             }
         }
         // set the 'middle' room as PLACED
         roomPlacementMap[roomsList.length / 2][roomsList.length / 2] = MapState.PLACED;
-        mapRooms(roomPlacementMap, roomsToPlace, false);
+        mapRooms(roomPlacementMap, rommsToPlace, false);
         return roomPlacementMap;
     }
 
@@ -76,7 +73,10 @@ public abstract class Level implements Logic {
         while (roomsToPlace > 0) {
             DiscreteCoordinates currentPosition = randomPlacedCoords(roomPlacementMap);
             int freeSlots = calcFreeSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
-            int toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
+            int toPlace;
+            if (roomsToPlace == 1) toPlace = 1;
+            else
+                toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
             mapRoomsAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
             roomsToPlace -= toPlace;
             roomPlacementMap[currentPosition.x][currentPosition.y] = MapState.EXPLORED;
