@@ -27,7 +27,8 @@ public abstract class ICRogueRoom extends Area implements Logic {
         behaviorName = givenBehaviorName;
         roomCoordinates = givenRoomCoordinates;
         for (int i = 0; i < roomConnectors.length; i++){
-            roomConnectors[i] = new Connector(this, orientations.get(i), connectorsCoordinates.get(i));
+            // connectorInRoom has the opposite orientation of Connector (important for the sprite)
+            roomConnectors[i] = new Connector(this, orientations.get(i).opposite(), connectorsCoordinates.get(i));
         }
 
     }
