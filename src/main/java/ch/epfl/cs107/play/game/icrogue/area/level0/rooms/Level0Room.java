@@ -34,6 +34,10 @@ public class Level0Room extends ICRogueRoom{
             this.orientation = orientation;
         }
 
+        public Orientation getOrientation(){
+            return orientation;
+        }
+
         private static ArrayList<Orientation> getAllConnectorsOrientation() {
             ArrayList <Orientation > orientations = new ArrayList < > ();
             for (Level0Connectors connector: Level0Connectors.values()) {
@@ -55,6 +59,7 @@ public class Level0Room extends ICRogueRoom{
             return this.ordinal();
         }
 
+        // TODO implement destinations from this
         @Override
         public DiscreteCoordinates getDestination() {
             return destination;

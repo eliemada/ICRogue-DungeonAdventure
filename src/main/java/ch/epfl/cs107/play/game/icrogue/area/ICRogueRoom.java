@@ -39,6 +39,10 @@ public abstract class ICRogueRoom extends Area implements Logic {
         return roomConnectors;
     }
 
+    public DiscreteCoordinates getRoomCoordinates(){
+        return roomCoordinates;
+    }
+
     /**
      * Create the area by adding it all actors
      * called by begin method

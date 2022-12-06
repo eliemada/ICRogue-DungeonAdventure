@@ -1,5 +1,7 @@
 package ch.epfl.cs107.play.game.icrogue;
 
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +32,23 @@ public class RandomHelper {
 
         int remainingValues = k;
         List<Integer> values = new ArrayList<>(list), res = new ArrayList<>();
+
+        while (remainingValues > 0) {
+            int ix = chooseGenerator.nextInt(values.size());
+            res.add(list.get(ix));
+            values.remove(ix);
+            remainingValues -= 1;
+        }
+
+        return res;
+    }
+
+    public static ArrayList<DiscreteCoordinates> chooseKInList(int k, ArrayList<DiscreteCoordinates> list) {
+        if (k > list.size())
+            throw new IllegalArgumentException();
+
+        int remainingValues = k;
+        ArrayList<DiscreteCoordinates> values = new ArrayList<>(list), res = new ArrayList<>();
 
         while (remainingValues > 0) {
             int ix = chooseGenerator.nextInt(values.size());
