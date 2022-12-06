@@ -66,7 +66,6 @@ public class ICRogue extends AreaGame {
         if(!player.isAlive()){
             gameOver();
             end();
-
         }
         // TODO delete below tests
 //        if ((currentRoom != null) && !currentRoom.isOff()) System.out.println("!isOff");

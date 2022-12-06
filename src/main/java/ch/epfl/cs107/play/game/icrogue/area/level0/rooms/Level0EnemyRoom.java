@@ -1,13 +1,17 @@
 package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
 
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Enemy;
+import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Level0EnemyRoom extends Level0Room implements Logic {
+
+
     List<Enemy> enemies = new ArrayList<>();
 
     public Level0EnemyRoom(DiscreteCoordinates givenRoomCoordinates) {

@@ -3,15 +3,19 @@ package ch.epfl.cs107.play.game.icrogue.actor.projectiles;/*
  *	Date:
  */
 
+import ch.epfl.cs107.play.game.actor.Acoustics;
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.window.Audio;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.ArrayList;
@@ -19,12 +23,12 @@ import java.util.Collections;
 import java.util.List;
 
 
-
-public class Fire extends Projectile {
-    private final static int DEFAULT_DAMAGE_FIRE = 1;
+public class Fire extends Projectile implements Acoustics {
+    private              SoundAcoustics fireBallSound;
+    private final static int            DEFAULT_DAMAGE_FIRE = 1;
     private final static int DEFAULT_MOVE_DURATION = 5;
     private static final int ANIMATION_DURATION    = 5;
-
+    private boolean soundHasBeenExecuted = false;
     private int damage, duration;
     private Sprite [] sprites = Sprite.extractSprites("zelda/fire",
             7, 1, 1,
@@ -68,6 +72,8 @@ public class Fire extends Projectile {
         damage = givenDamage;
         duration = givenDuration;
         spriteFire = new Sprite("zelda/fire",1f,1f,this,new RegionOfInterest(0,0,16,16),new Vector(0,0));
+        fireBallSound = new SoundAcoustics(ResourcePath.getSound("fireBall"));
+        fireBallSound.shouldBeStarted();
     }
     public Fire(Area room, Orientation orientation, DiscreteCoordinates position) {
         this(room, orientation, position, DEFAULT_DAMAGE_FIRE, DEFAULT_MOVE_DURATION);
@@ -140,7 +146,12 @@ public class Fire extends Projectile {
     public boolean isViewInteractable() {
         return true;
     }
-
+    @Override
+    public void bip(Audio audio) {
+        if (!soundHasBeenExecuted){
+            fireBallSound.bip(audio);
+            soundHasBeenExecuted = true;}
+    }
 
 
 
