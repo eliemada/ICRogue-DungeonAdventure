@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
-    private static final int ANIMATION_DURATION = 5;
+    private static final int ANIMATION_DURATION = 2;
     private final Keyboard keyboard;
     private     float        healthPoints;
     private TextGraphics shownHp;
@@ -52,16 +52,16 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         shownHp.setAnchor(new Vector(0.3f, 2.1f));
         keyboard = getOwnerArea().getKeyboard();
         handler = new ICRoguePlayerInteractionHandler();
-        /*copain = Sprite.extractSprites("boy.1",4, 0.5f, 0.65625f, this,16,16,new Vector(0,-0.33f),
+        copain = Sprite.extractSpritesCol("boy.1",4, 0.5f, 0.65625f, this,16,21,new Vector(0,-0.33f),
                 new Orientation [] { Orientation .DOWN ,
-                Orientation .RIGHT , Orientation .UP , Orientation . LEFT }); */
+                Orientation .LEFT , Orientation .UP , Orientation . RIGHT });
         sprites = Sprite.extractSprites("zelda/player",
                 4, 1, 2,
                 this , 16, 32, new Orientation [] { Orientation .DOWN ,
                         Orientation .RIGHT , Orientation .UP , Orientation . LEFT });
         animationsMainPlayer =
         Animation.createAnimations( ANIMATION_DURATION /2, sprites );
-        //animationsCopain = Animation.createAnimations( ANIMATION_DURATION /2, copain );
+        animationsCopain = Animation.createAnimations( ANIMATION_DURATION /2, copain );
         shadow = new Sprite("shadow",1,1,this,new RegionOfInterest(0,0,16,16),new Vector(0,-0.1f));
     }
 
@@ -113,7 +113,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 orientate(orientation);
                 move(MOVE_DURATION);
                 animationsMainPlayer[getOrientation().ordinal()].update(deltatime);
-                //animationsCopain[getOrientation().ordinal()].update(deltatime);
+                animationsCopain[getOrientation().ordinal()].update(deltatime);
             }
 
         }
@@ -125,19 +125,19 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         switch (getOrientation()) {
             case UP :
                 animationsMainPlayer[Orientation.UP.ordinal()].draw(canvas);
-                //animationsCopain[Orientation.UP.ordinal()].draw(canvas);
+                animationsCopain[Orientation.UP.ordinal()].draw(canvas);
                 break;
             case DOWN :
                 animationsMainPlayer[Orientation.DOWN.ordinal()].draw(canvas);
-                //animationsCopain[Orientation.DOWN.ordinal()].draw(canvas);
+                animationsCopain[Orientation.DOWN.ordinal()].draw(canvas);
                 break;
             case LEFT :
                 animationsMainPlayer[Orientation.LEFT.ordinal()].draw(canvas);
-                //animationsCopain[Orientation.LEFT.ordinal()].draw(canvas);
+                animationsCopain[Orientation.LEFT.ordinal()].draw(canvas);
                 break;
             case RIGHT:
                 animationsMainPlayer[Orientation.RIGHT.ordinal()].draw(canvas);
-                //animationsCopain[Orientation.RIGHT.ordinal()].draw(canvas);
+                animationsCopain[Orientation.RIGHT.ordinal()].draw(canvas);
                 break;
         }
         shownHp.draw(canvas);

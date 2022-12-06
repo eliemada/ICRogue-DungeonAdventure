@@ -15,7 +15,7 @@ public class Level0 extends Level {
         // TODO make posArrival dynamic? (pas dans l'énnoncé)
         super(new DiscreteCoordinates(2, 3), new DiscreteCoordinates(4, 2));
         generateFixedMap(new DiscreteCoordinates(4, 2));
-        setStartingRoom(new DiscreteCoordinates(0, 0));
+        setStartingRoom(new DiscreteCoordinates(1, 1));
     }
 
     private void generateMap1() {
