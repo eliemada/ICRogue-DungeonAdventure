@@ -11,9 +11,10 @@ public abstract class Level implements Logic {
     private DiscreteCoordinates posBossRoom;
     private String titleStartRoom;
 
+
     @Override
     public boolean isOn() {
-        return roomsMapped[posArrival.x][posBossRoom.y].isOn();
+        return roomsMapped[posBossRoom.x][posBossRoom.y].isOn();
     }
 
     @Override
