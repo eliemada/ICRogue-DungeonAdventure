@@ -6,9 +6,7 @@ import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 
-import ch.epfl.cs107.play.game.tutosSolution.area.Tuto2Area;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -20,6 +18,7 @@ public class ICRogue extends AreaGame {
     private     Level           currentLevel;
     private     ICRogueRoom     currentRoom;
     private     ICRoguePlayer   player;
+    private final DiscreteCoordinates POS_ARRIVAL = new DiscreteCoordinates(4, 4);
 
     /**
      * Add all the areas
@@ -29,16 +28,16 @@ public class ICRogue extends AreaGame {
         currentLevel.registerRooms(this);
         // TODO what does forceBegin mean?
         setCurrentArea(currentLevel.getTitleStartRoom(), false);
-        DiscreteCoordinates coords = new DiscreteCoordinates(2, 3);
-        player = new ICRoguePlayer(getCurrentArea(), Orientation.UP, coords);
-        player.enterArea(getCurrentArea(), coords);
+        player = new ICRoguePlayer(getCurrentArea(), Orientation.UP, POS_ARRIVAL);
+        player.enterArea(getCurrentArea(), POS_ARRIVAL);
         keyboard= getCurrentArea().getKeyboard();
     }
 
     private void switchRoom() {
         // TODO find better way to hand down destArea and coords from connector to ICRogue
         setCurrentArea(player.getDestArea(), false);
-        player.enterArea(getCurrentArea(), new DiscreteCoordinates(2, 3));
+        player.enterArea(getCurrentArea(), POS_ARRIVAL);
+        currentRoom = (ICRogueRoom) getCurrentArea();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class ICRogue extends AreaGame {
             switchRoom();
         }
         if(currentLevel.isOn()){
-            System.out.println("win");
+            System.out.println("Win!");
             end();
         }
         if(!player.isAlive()){
@@ -69,6 +68,8 @@ public class ICRogue extends AreaGame {
             end();
 
         }
+        // TODO delete below tests
+//        if ((currentRoom != null) && !currentRoom.isOff()) System.out.println("!isOff");
     }
 
     public void gameOver(){
@@ -90,7 +91,7 @@ public class ICRogue extends AreaGame {
         }
     }
 
-    public void ended(){
+    public void showCredits(){
         String end = " ________       ___    ___              _______    ___        ___   _______           "
                    + "________   ________   ___  ___   ________    ________                                                                               \n"
                      + "|\\   __  \\     |\\  \\  /  /|            |\\  ___ \\  |\\  \\      |\\  \\ |\\  ___ \\         |\\   __  \\ |\\   __  \\ |\\  \\|\\  \\ |\\   ___  \\ |\\   __  \\                                                                              \n"
@@ -116,7 +117,7 @@ public class ICRogue extends AreaGame {
 
     @Override
     public void end() {
-        ended();
+        showCredits();
         System.exit(0);
     }
 

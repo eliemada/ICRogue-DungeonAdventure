@@ -8,10 +8,10 @@ import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-public abstract class Enemies extends ICRogueActor {
+public abstract class Enemy extends ICRogueActor {
     private boolean isAlive = true;
     Sprite sprite;
-    public Enemies(Area room, Orientation orientation, DiscreteCoordinates position) {
+    public Enemy(Area room, Orientation orientation, DiscreteCoordinates position) {
         super(room, orientation, position);
     }
     public void Consume() {

@@ -47,7 +47,7 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
     /// - start indicate if area already begins, paused indicate if we display the pause menu
     private boolean started, paused;
     private AreaPauseMenu menu;
-    private boolean isInRoom = false;
+    private boolean wasVisited = false;
 
 
 
@@ -97,11 +97,11 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
             removeActor(a, true);
         }
     }
-    public void setIsInRoom(boolean given){
-        isInRoom = given;
+    public void visit(){
+        wasVisited = true;
     }
-    public boolean getIsInRoom(){
-        return isInRoom;
+    public boolean getWasVisited(){
+        return wasVisited;
     }
 
 

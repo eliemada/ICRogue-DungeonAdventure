@@ -8,28 +8,11 @@ public abstract class Level implements Logic {
     private ICRogueRoom roomsMapped[][];
 
     private DiscreteCoordinates posArrival;
-    private DiscreteCoordinates posBossRoom;
+    private DiscreteCoordinates posBossRoom = new DiscreteCoordinates(0, 0);
     private String titleStartRoom;
-
-
-    @Override
-    public boolean isOn() {
-        return roomsMapped[posBossRoom.x][posBossRoom.y].isOn();
-    }
-
-    @Override
-    public boolean isOff() {
-        return roomsMapped[posBossRoom.x][posBossRoom.y].isOff();
-    }
-
-    @Override
-    public float getIntensity() {
-        return 1.0f;
-    }
 
     public Level(DiscreteCoordinates posArrival, DiscreteCoordinates dimensionsMap) {
         this.posArrival = posArrival;
-        this.posBossRoom = new DiscreteCoordinates(0, 0);
     }
 
     public void registerRooms(AreaGame parent){
@@ -71,6 +54,22 @@ public abstract class Level implements Logic {
 
     protected void setStartingRoom(DiscreteCoordinates coords){
         titleStartRoom = roomsMapped[coords.x][coords.y].getTitle();
+    }
+
+    @Override
+    public boolean isOn() {
+        return (roomsMapped[posBossRoom.x][posBossRoom.y] != null) &&
+                roomsMapped[posBossRoom.x][posBossRoom.y].isOn();
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
+    }
+
+    @Override
+    public float getIntensity(){
+        return isOn() ? 1.0f : 0.0f;
     }
 
 }

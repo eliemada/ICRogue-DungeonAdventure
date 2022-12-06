@@ -79,9 +79,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     @Override
     public void enterArea(Area area, DiscreteCoordinates position){
         super.enterArea(area, position);
+        area.visit();
         isBetweenRooms = false;
-        //Put the boolean here
-        area.setIsInRoom(true);
     }
 
     @Override
@@ -228,7 +227,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         public void interactWith(Connector connector, boolean isCellInteraction){
             if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
             if (wantsViewInteraction()){
-                connector.openWithKey(keyIds);
+                connector.open(keyIds);
             } else if (wantsCellInteraction() && !isDisplacementOccurs()){
                 isBetweenRooms = true;
                 destArea = connector.getDestArea();

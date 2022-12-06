@@ -4,7 +4,7 @@ import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0KeyRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurrentRoom;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurretRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Level0 extends Level {
@@ -12,6 +12,7 @@ public class Level0 extends Level {
     private final int BOSS_KEY_ID = 3;
 
     public Level0() {
+        // TODO make posArrival dynamic? (pas dans l'énnoncé)
         super(new DiscreteCoordinates(2, 3), new DiscreteCoordinates(4, 2));
         generateFixedMap(new DiscreteCoordinates(4, 2));
         setStartingRoom(new DiscreteCoordinates(0, 0));
@@ -30,7 +31,7 @@ public class Level0 extends Level {
 
     private void generateMap2() {
         DiscreteCoordinates room00 = new DiscreteCoordinates(0, 0);
-        setRoom(room00, new Level0TurrentRoom(room00) );
+        setRoom(room00, new Level0TurretRoom(room00) );
         setRoomConnector(room00, "icrogue/level010", Level0Room.Level0Connectors.E);
 
         DiscreteCoordinates room10 = new DiscreteCoordinates(1, 0);

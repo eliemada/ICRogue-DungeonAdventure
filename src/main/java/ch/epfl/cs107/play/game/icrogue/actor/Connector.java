@@ -28,10 +28,6 @@ public class Connector extends AreaEntity {
     private Sprite spriteInvisible = new Sprite("icrogue/invisibleDoor_"+ getOrientation().ordinal(),
             (getOrientation().ordinal()+1)%2+1, getOrientation().ordinal()%2+1, this);
 
-    public void openWithKey(ArrayList<Integer> keyIds) {
-        if (state == State.CLOSED || (keyIds.size() > 0 && keyIds.contains(keyId)))
-            state = State.OPEN;
-    }
 
     public static enum State {
         OPEN, CLOSED, LOCKED, INVISIBLE
@@ -49,6 +45,15 @@ public class Connector extends AreaEntity {
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
         state = State.INVISIBLE;
+    }
+
+    public void open() {
+        if (state == State.CLOSED) state = State.OPEN;
+    }
+
+    public void open(ArrayList<Integer> keyIds) {
+        if (((state == State.LOCKED) && (keyIds.size() > 0) && keyIds.contains(keyId))) state = State.OPEN;
+        else open();
     }
 
     public void setDestination(String destArea, DiscreteCoordinates destCoords) {
