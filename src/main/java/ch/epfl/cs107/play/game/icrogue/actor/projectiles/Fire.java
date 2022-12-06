@@ -72,7 +72,7 @@ public class Fire extends Projectile implements Acoustics {
         damage = givenDamage;
         duration = givenDuration;
         spriteFire = new Sprite("zelda/fire",1f,1f,this,new RegionOfInterest(0,0,16,16),new Vector(0,0));
-        fireBallSound = new SoundAcoustics(ResourcePath.getSound("fireBall"));
+        fireBallSound = new SoundAcoustics(ResourcePath.getSound("fireBall"),0.5f,false,false,false,false);
         fireBallSound.shouldBeStarted();
     }
     public Fire(Area room, Orientation orientation, DiscreteCoordinates position) {

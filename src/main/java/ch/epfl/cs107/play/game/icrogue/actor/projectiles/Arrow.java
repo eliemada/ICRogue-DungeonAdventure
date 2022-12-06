@@ -26,7 +26,7 @@ public class Arrow extends Projectile implements Acoustics {
         setSprite(new Sprite("zelda/arrow", 1f, 1f, this ,
                 new RegionOfInterest(32 * orientation.ordinal(), 0, 32, 32),
                 new Vector(0, 0)));
-        fireBallSound = new SoundAcoustics(ResourcePath.getSound("bow_shoot"));
+        fireBallSound = new SoundAcoustics(ResourcePath.getSound("bow_shoot"),0.5f,false,false,false,false);
     }
 
     @Override
