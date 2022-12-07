@@ -17,11 +17,46 @@ public class Level0 extends Level {
     private final int[] ROOM_TYPES_DISTRIBUTION = {2, 2, 1, 6, 1};
 
     public Level0() {
-//        super();
-//        super.generateRandomMap(ROOM_TYPES_DISTRIBUTION);
-        super(new DiscreteCoordinates(0, 0), 4, 2);
-        generateMap2();
-        setStartingRoom(new DiscreteCoordinates(1, 1));
+        super();
+        super.generateRandomMap(ROOM_TYPES_DISTRIBUTION);
+//        super(new DiscreteCoordinates(0, 0), 4, 2);
+//        generateMap2();
+//        setStartingRoom(new DiscreteCoordinates(1, 1));
+    }
+
+    @Override
+    protected void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room) {
+        // scan neighbors
+
+        DiscreteCoordinates pos = room.getRoomCoordinates();
+        for (int i = 0; i < Level0Connectors.values().length; i++) {
+            DiscreteCoordinates neighborPos = pos.jump(Level0Connectors.values()[i].getOrientation().toVector());
+            // check if neighbourPos is in the map
+            if (neighborPos.x >= 0 && neighborPos.x < roomsMapped.length && neighborPos.y >= 0 && neighborPos.y < roomsMapped[0].length) {
+                MapState neighborState = roomsMapped[neighborPos.x][neighborPos.y];
+                if (neighborState == MapState.CREATED) {
+                    setRoomConnector(pos, ("icrogue/level0" + neighborPos.x) + neighborPos.y, Level0Connectors.values()[i]);
+                } else if (neighborState == MapState.BOSS_ROOM) {
+                    setRoomConnector(pos, ("icrogue/level0" + neighborPos.x) + neighborPos.y, Level0Connectors.values()[i]);
+                    lockRoomConnector(pos, Level0Connectors.values()[i], BOSS_KEY_ID);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void createRoom(int type, DiscreteCoordinates position) {
+        if (type == 4) {
+            setRoom(position, new Level0Room(position));
+            setStartingRoom(position);
+        } else
+            switch (type) {
+                case 0 -> setRoom(position, new Level0TurretRoom(position));
+                case 1 -> setRoom(position, new Level0StaffRoom(position));
+                case 2 -> setRoom(position, new Level0KeyRoom(position, BOSS_KEY_ID));
+                case 3 -> setRoom(position, new Level0Room(position));
+            }
     }
 
     private void generateMap1() {
@@ -60,42 +95,6 @@ public class Level0 extends Level {
         DiscreteCoordinates room11 = new DiscreteCoordinates(1, 1);
         setRoom(room11, new Level0Room(room11));
         setRoomConnector(room11, "icrogue/level010", Level0Room.Level0Connectors.N);
-    }
-
-    @Override
-    protected void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room) {
-        // scan neighbors
-
-        DiscreteCoordinates pos = room.getRoomCoordinates();
-        for (int i = 0; i < Level0Connectors.values().length; i++) {
-            DiscreteCoordinates neighborPos = pos.jump(Level0Connectors.values()[i].getOrientation().toVector());
-            // check if neighbourPos is in the map
-            if (neighborPos.x >= 0 && neighborPos.x < roomsMapped.length && neighborPos.y >= 0 && neighborPos.y < roomsMapped[0].length) {
-                MapState neighborState = roomsMapped[neighborPos.x][neighborPos.y];
-                if (neighborState == MapState.CREATED) {
-                    setRoomConnector(pos, ("icrogue/level0" + neighborPos.x) + neighborPos.y, Level0Connectors.values()[i]);
-                } else if (neighborState == MapState.BOSS_ROOM) {
-                    // if neighbor is full, create a connector
-                    setRoomConnector(pos, ("icrogue/level0" + neighborPos.x) + neighborPos.y, Level0Connectors.values()[i]);
-                    lockRoomConnector(pos, Level0Connectors.values()[i], BOSS_KEY_ID);
-                }
-            }
-        }
-
-    }
-
-    @Override
-    protected void createRoom(int type, DiscreteCoordinates position) {
-        if (type == 4) {
-            setRoom(position, new Level0Room(position));
-            setStartingRoom(position);
-        } else
-            switch (type) {
-                case 0 -> setRoom(position, new Level0TurretRoom(position));
-                case 1 -> setRoom(position, new Level0StaffRoom(position));
-                case 2 -> setRoom(position, new Level0KeyRoom(position, BOSS_KEY_ID));
-                case 3 -> setRoom(position, new Level0Room(position));
-            }
     }
 
 }

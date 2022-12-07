@@ -16,7 +16,7 @@ public abstract class Level implements Logic {
     private DiscreteCoordinates posBossRoom = new DiscreteCoordinates(0, 0);
     private String titleStartRoom;
 
-    // TODO is this startPosition or startRoom
+    // TODO is this startPosition or startRoom?
     protected Level (DiscreteCoordinates startPosition, int width , int height) {
         generateFixedMap(width, height);
     }
@@ -26,13 +26,12 @@ public abstract class Level implements Logic {
     protected void generateRandomMap(int[] roomsDistribution) {
         int nbRooms = Arrays.stream(roomsDistribution).sum();
         generateFixedMap(nbRooms, nbRooms);
-        MapState[][] mappedRooms = generateRandomRoomPlacement(roomsDistribution, nbRooms);
+        MapState[][] mappedRooms = generateRandomRoomPlacement(nbRooms);
         generateRooms(roomsDistribution, mappedRooms);
         for (ICRogueRoom[] rooms : roomsList)
             for (ICRogueRoom room : rooms)
                 if (room != null)
                     setupConnectors(mappedRooms, room);
-
     }
 
     protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
@@ -45,7 +44,6 @@ public abstract class Level implements Logic {
                 for (int y = 0; y < mappedRooms[x].length; y++)
                     if ((mappedRooms[x][y] == MapState.PLACED) || (mappedRooms[x][y] == MapState.EXPLORED))
                         potentialMapIndexes.add(new DiscreteCoordinates(x, y));
-
             for (DiscreteCoordinates position : RandomHelper.chooseKInList(roomsDistribution[i], potentialMapIndexes)) {
                 createRoom(i, position);
                 mappedRooms[position.x][position.y] = MapState.CREATED;
@@ -55,20 +53,19 @@ public abstract class Level implements Logic {
 
     protected abstract void createRoom(int type, DiscreteCoordinates position);
 
-    protected MapState [][] generateRandomRoomPlacement(int[] roomsDistribution, int nbRooms) {
-        MapState[][] roomPlacementMap = new MapState[nbRooms][nbRooms];
-        int roomsToPlace = nbRooms;
+    protected MapState [][] generateRandomRoomPlacement(int roomsToPlace) {
+        MapState[][] roomPlacementMap = new MapState[roomsToPlace][roomsToPlace];
 
         // initialize map
-        for (MapState[] row : roomPlacementMap) {
-            for (MapState cell : row) {
-                cell = MapState.NULL;
-                roomsToPlace--;
+        for (int i = 0; i < roomPlacementMap.length; i++) {
+            for (int j = 0; j < roomPlacementMap[i].length; j++) {
+                roomPlacementMap[i][j] = MapState.NULL;
             }
         }
         // set the 'middle' room as PLACED
         roomPlacementMap[roomsList.length / 2][roomsList.length / 2] = MapState.PLACED;
-        mapRooms(roomPlacementMap, roomsToPlace, false);
+        mapRooms(roomPlacementMap, roomsToPlace - 1, false);
+        printMap(roomPlacementMap);
         return roomPlacementMap;
     }
 
@@ -76,12 +73,15 @@ public abstract class Level implements Logic {
         while (roomsToPlace > 0) {
             DiscreteCoordinates currentPosition = randomPlacedCoords(roomPlacementMap);
             int freeSlots = calcFreeSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
-            int toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
+            int toPlace;
+            if (roomsToPlace == 1) toPlace = 1;
+            else
+                toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
             mapRoomsAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
             roomsToPlace -= toPlace;
             roomPlacementMap[currentPosition.x][currentPosition.y] = MapState.EXPLORED;
         }
-        if(!isBossRoom) mapRooms(roomPlacementMap, roomsToPlace, true);
+        if(!isBossRoom) mapRooms(roomPlacementMap, 1, true);
     }
 
     private void mapRoomsAround(MapState[][] roomPlacementMap, DiscreteCoordinates currentPosition, int toPlace, boolean isBossRoom) {
@@ -147,6 +147,28 @@ public abstract class Level implements Logic {
             freeSlots++;
         }
         return freeSlots;
+    }
+
+    private void printMapAlt(MapState [][] map) {
+        System.out.println("Generated map:");
+        System.out.print(" | ");
+        for (int x = 0; x < map.length; x++) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+        System.out.print("--|-");
+        for (int x = 0; x < map.length; x++) {
+            System.out.print("--");
+        }
+        System.out.println();
+        for (int y = 0; y < map.length; y++) {
+            System.out.print(map[0].length - y - 1 + " | ");
+            for (int x = 0; x < map.length; x++) {
+                System.out.print(map[x][y] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     private void printMap(MapState [][] map) {
