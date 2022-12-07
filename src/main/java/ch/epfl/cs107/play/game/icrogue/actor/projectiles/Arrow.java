@@ -31,7 +31,8 @@ public class Arrow extends Projectile implements Acoustics {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor areaInteractionVisitor, boolean isCellInteraction) {
-        ((ICRogueInteractionHandler) areaInteractionVisitor).interactWith(this , isCellInteraction);
+        if (!isConsumed())
+            ((ICRogueInteractionHandler) areaInteractionVisitor).interactWith(this , isCellInteraction);
     }
     public void update(float deltatime){
         super.update(deltatime);

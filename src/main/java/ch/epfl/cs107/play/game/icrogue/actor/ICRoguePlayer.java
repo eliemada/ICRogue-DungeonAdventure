@@ -101,7 +101,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
     }
 
-    private void touched(Projectile projectile){
+    private void touchedBy(Projectile projectile){
         healthPoints -= projectile.getDamage();
     }
     private void ifKeyIsPressed(Button pressedKey){
@@ -192,18 +192,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
         public void interactWith(Cherry cherry,boolean isCellInteraction){
-            if (cherry.isCellInteractable()){
-                acceptInteraction(this,isCellInteraction);
-            }
-            if (wantsCellInteraction()){
-                cherry.collect();
-            }
+            if (wantsCellInteraction()) cherry.collect();
         }
 
         public void interactWith(Staff staff, boolean isCellInteraction){
-            if (staff.isCellInteractable()){
-                acceptInteraction(this,isCellInteraction);
-            }
             if (wantsViewInteraction()){
                 staff.collect();
                 hasStaff = true;
@@ -211,9 +203,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
 
         public void interactWith(Key key, boolean isCellInteraction){
-            if (key.isCellInteractable()){
-                acceptInteraction(this,isCellInteraction);
-            }
             if (wantsCellInteraction()){
                 key.collect();
                 keyIds.add(key.getId());
@@ -225,10 +214,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         // If it is in touch/contact interaction and not moving
         // (!isDisplacementOccurs()), it can transit to the destination of the connectors.
         public void interactWith(Connector connector, boolean isCellInteraction){
-            if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
+            // if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
             if (wantsViewInteraction()){
                 connector.open(keyIds);
-            } else if (wantsCellInteraction() && !isDisplacementOccurs()){
+            }
+            if (wantsCellInteraction() && !isDisplacementOccurs()){
                 isBetweenRooms = true;
                 destArea = connector.getDestArea();
                 leaveArea();
@@ -246,8 +236,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
          */
         public void interactWith(Arrow arrow, boolean isCellInteraction){
 
-            if(isCellInteraction && !arrow.isConsumed()){
-                touched(arrow);
+            if(isCellInteraction){
+                touchedBy(arrow);
                 arrow.consume();
             }
         }
