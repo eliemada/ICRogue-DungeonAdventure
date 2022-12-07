@@ -37,16 +37,29 @@ public abstract class Level implements Logic {
     protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
 
     private void generateRooms(int[] roomsDistribution, MapState[][] mappedRooms) {
-        for (int i = 0; i < roomsDistribution.length; i++) {
-            ArrayList<DiscreteCoordinates> potentialMapIndexes = new ArrayList<>();
-            // index all rooms that are PLACED or EXPLORED
-            for (int x = 0; x < mappedRooms.length; x++)
-                for (int y = 0; y < mappedRooms[x].length; y++)
-                    if ((mappedRooms[x][y] == MapState.PLACED) || (mappedRooms[x][y] == MapState.EXPLORED))
-                        potentialMapIndexes.add(new DiscreteCoordinates(x, y));
-            for (DiscreteCoordinates position : RandomHelper.chooseKInList(roomsDistribution[i], potentialMapIndexes)) {
-                createRoom(i, position);
-                mappedRooms[position.x][position.y] = MapState.CREATED;
+        for (int i = 0; i <= roomsDistribution.length; i++) {
+            // non-boss rooms (rooms in the distribution)
+            if (i < roomsDistribution.length) {
+                // index all rooms that are PLACED or EXPLORED
+                ArrayList<DiscreteCoordinates> potentialMapIndexes = new ArrayList<>();
+                for (int x = 0; x < mappedRooms.length; x++)
+                    for (int y = 0; y < mappedRooms[x].length; y++)
+                        if ((mappedRooms[x][y] == MapState.PLACED) || (mappedRooms[x][y] == MapState.EXPLORED))
+                            potentialMapIndexes.add(new DiscreteCoordinates(x, y));
+                // place rooms pseudorandomly in available spots
+                for (DiscreteCoordinates position : RandomHelper.chooseKInList(roomsDistribution[i], potentialMapIndexes)) {
+                    createRoom(i, position);
+                    mappedRooms[position.x][position.y] = MapState.CREATED;
+                }
+            }
+            else {
+                DiscreteCoordinates position = new DiscreteCoordinates(0, 0);
+                for (int x = 0; x < mappedRooms.length; x++)
+                    for (int y = 0; y < mappedRooms[x].length; y++)
+                        if ((mappedRooms[x][y] == MapState.BOSS_ROOM))
+                            position = new DiscreteCoordinates(x, y);
+                createRoom(-1, position);
+                posBossRoom = position;
             }
         }
     }

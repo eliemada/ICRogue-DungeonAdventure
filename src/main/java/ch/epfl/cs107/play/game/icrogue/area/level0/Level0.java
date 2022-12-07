@@ -52,6 +52,7 @@ public class Level0 extends Level {
             setStartingRoom(position);
         } else
             switch (type) {
+                case -1 -> setRoom(position, new Level0TurretRoom(position)); // boss room is turret room
                 case 0 -> setRoom(position, new Level0TurretRoom(position));
                 case 1 -> setRoom(position, new Level0StaffRoom(position));
                 case 2 -> setRoom(position, new Level0KeyRoom(position, BOSS_KEY_ID));
