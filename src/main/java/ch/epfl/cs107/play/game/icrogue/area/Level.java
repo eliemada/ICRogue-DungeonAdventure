@@ -16,7 +16,7 @@ public abstract class Level implements Logic {
     private DiscreteCoordinates posBossRoom = new DiscreteCoordinates(0, 0);
     private String titleStartRoom;
 
-    // TODO is this startPosition or startRoom
+    // TODO is this startPosition or startRoom?
     protected Level (DiscreteCoordinates startPosition, int width , int height) {
         generateFixedMap(width, height);
     }
@@ -26,13 +26,12 @@ public abstract class Level implements Logic {
     protected void generateRandomMap(int[] roomsDistribution) {
         int nbRooms = Arrays.stream(roomsDistribution).sum();
         generateFixedMap(nbRooms, nbRooms);
-        MapState[][] mappedRooms = generateRandomRoomPlacement(roomsDistribution, nbRooms);
+        MapState[][] mappedRooms = generateRandomRoomPlacement(nbRooms);
         generateRooms(roomsDistribution, mappedRooms);
         for (ICRogueRoom[] rooms : roomsList)
             for (ICRogueRoom room : rooms)
                 if (room != null)
                     setupConnectors(mappedRooms, room);
-
     }
 
     protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
@@ -54,8 +53,8 @@ public abstract class Level implements Logic {
 
     protected abstract void createRoom(int type, DiscreteCoordinates position);
 
-    protected MapState [][] generateRandomRoomPlacement(int[] roomsDistribution, int rommsToPlace) {
-        MapState[][] roomPlacementMap = new MapState[rommsToPlace][rommsToPlace];
+    protected MapState [][] generateRandomRoomPlacement(int roomsToPlace) {
+        MapState[][] roomPlacementMap = new MapState[roomsToPlace][roomsToPlace];
 
         // initialize map
         for (int i = 0; i < roomPlacementMap.length; i++) {
@@ -65,7 +64,8 @@ public abstract class Level implements Logic {
         }
         // set the 'middle' room as PLACED
         roomPlacementMap[roomsList.length / 2][roomsList.length / 2] = MapState.PLACED;
-        mapRooms(roomPlacementMap, rommsToPlace, false);
+        mapRooms(roomPlacementMap, roomsToPlace - 1, false);
+        printMap(roomPlacementMap);
         return roomPlacementMap;
     }
 
@@ -81,7 +81,7 @@ public abstract class Level implements Logic {
             roomsToPlace -= toPlace;
             roomPlacementMap[currentPosition.x][currentPosition.y] = MapState.EXPLORED;
         }
-        if(!isBossRoom) mapRooms(roomPlacementMap, roomsToPlace, true);
+        if(!isBossRoom) mapRooms(roomPlacementMap, 1, true);
     }
 
     private void mapRoomsAround(MapState[][] roomPlacementMap, DiscreteCoordinates currentPosition, int toPlace, boolean isBossRoom) {
@@ -147,6 +147,28 @@ public abstract class Level implements Logic {
             freeSlots++;
         }
         return freeSlots;
+    }
+
+    private void printMapAlt(MapState [][] map) {
+        System.out.println("Generated map:");
+        System.out.print(" | ");
+        for (int x = 0; x < map.length; x++) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+        System.out.print("--|-");
+        for (int x = 0; x < map.length; x++) {
+            System.out.print("--");
+        }
+        System.out.println();
+        for (int y = 0; y < map.length; y++) {
+            System.out.print(map[0].length - y - 1 + " | ");
+            for (int x = 0; x < map.length; x++) {
+                System.out.print(map[x][y] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     private void printMap(MapState [][] map) {
