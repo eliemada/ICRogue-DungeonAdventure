@@ -13,15 +13,37 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 public class Level0 extends Level {
     private final int PART_1_KEY_ID = 1;
     private final int BOSS_KEY_ID = 3;
-    private final String[] ROOM_TYPES = {"turret",  "staff", "key", "normal", "spawn" };
-    private final int[] ROOM_TYPES_DISTRIBUTION = {2, 2, 1, 6, 1};
 
     public Level0() {
         super();
-        super.generateRandomMap(ROOM_TYPES_DISTRIBUTION);
-//        super(new DiscreteCoordinates(0, 0), 4, 2);
+        generateRandomMap(Level0RoomTypes.getRoomsDistribution());
+
+        // old generations
+//        super(4, 2);
 //        generateMap2();
 //        setStartingRoom(new DiscreteCoordinates(1, 1));
+    }
+
+    protected enum Level0RoomTypes {
+        TURRET (2),
+        STAFF (2),
+        KEY (1),
+        NORMAL (6),
+        SPAWN (1);
+
+        private int count = 0;
+        Level0RoomTypes (int count) {
+            this.count = count;
+        }
+
+        private static int[] getRoomsDistribution () {
+            Level0RoomTypes[] types = Level0RoomTypes.values();
+            int[] roomsDistribution = new int[types.length];
+            for (int i = 0 ; i < types.length; i++) {
+                roomsDistribution[i] = types[i].count;
+            }
+            return roomsDistribution;
+        }
     }
 
     @Override
@@ -60,6 +82,8 @@ public class Level0 extends Level {
             }
     }
 
+
+    // ----------- OLD MANUAL GEN METHODS BELOW --------------------------------
     private void generateMap1() {
         DiscreteCoordinates room00 = new DiscreteCoordinates(0, 0);
         setRoom(room00, new Level0KeyRoom(room00, PART_1_KEY_ID));

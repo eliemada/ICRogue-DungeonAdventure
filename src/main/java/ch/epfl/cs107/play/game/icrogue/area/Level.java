@@ -9,19 +9,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Level implements Logic {
-    // TODO static or dynamic array?
     private ICRogueRoom[][] roomsList;
-
-    private DiscreteCoordinates posArrival;
     private DiscreteCoordinates posBossRoom = new DiscreteCoordinates(0, 0);
     private String titleStartRoom;
 
-    // TODO is this startPosition or startRoom?
-    protected Level (DiscreteCoordinates startPosition, int width , int height) {
+    protected Level (int width , int height) {
         generateFixedMap(width, height);
     }
 
     protected Level () {}
+
+    protected enum MapState {
+
+        NULL , // Empty space
+        PLACED , // The room has been placed but not yet explored by the room placement algorithm
+        EXPLORED , // The room has been placed and explored by the algorithm
+        BOSS_ROOM , // The room is a boss room
+        CREATED; // The room has been instantiated in the room map
+
+        @Override
+        public String toString() {
+            return Integer.toString(ordinal());
+        }
+    }
 
     protected void generateRandomMap(int[] roomsDistribution) {
         int nbRooms = Arrays.stream(roomsDistribution).sum();
@@ -33,8 +43,6 @@ public abstract class Level implements Logic {
                 if (room != null)
                     setupConnectors(mappedRooms, room);
     }
-
-    protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
 
     private void generateRooms(int[] roomsDistribution, MapState[][] mappedRooms) {
         for (int i = 0; i <= roomsDistribution.length; i++) {
@@ -77,34 +85,34 @@ public abstract class Level implements Logic {
         }
         // set the 'middle' room as PLACED
         roomPlacementMap[roomsList.length / 2][roomsList.length / 2] = MapState.PLACED;
-        mapRooms(roomPlacementMap, roomsToPlace - 1, false);
-        printMap(roomPlacementMap);
+        fillMap(roomPlacementMap, roomsToPlace - 1, false);
         return roomPlacementMap;
     }
 
-    private void mapRooms(MapState[][] roomPlacementMap, int roomsToPlace, boolean isBossRoom) {
+    private void fillMap(MapState[][] roomPlacementMap, int roomsToPlace, boolean isBossRoom) {
         while (roomsToPlace > 0) {
-            DiscreteCoordinates currentPosition = randomPlacedCoords(roomPlacementMap);
+            DiscreteCoordinates currentPosition = randomPlacedPosition(roomPlacementMap);
             int freeSlots = calcFreeSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
             int toPlace;
             if (roomsToPlace == 1) toPlace = 1;
-            else
+            else // RandomHelper expects origin and bound to be different
                 toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
-            mapRoomsAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
+            fillMapAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
             roomsToPlace -= toPlace;
             roomPlacementMap[currentPosition.x][currentPosition.y] = MapState.EXPLORED;
         }
-        if(!isBossRoom) mapRooms(roomPlacementMap, 1, true);
+        // recursive call (with flag protection) for the boss room
+        if(!isBossRoom) fillMap(roomPlacementMap, 1, true);
     }
 
-    private void mapRoomsAround(MapState[][] roomPlacementMap, DiscreteCoordinates currentPosition, int toPlace, boolean isBossRoom) {
+    private void fillMapAround(MapState[][] roomPlacementMap, DiscreteCoordinates currentPosition, int toPlace, boolean isBossRoom) {
         int placed = 0;
         while (placed < toPlace) {
             int direction = RandomHelper.roomGenerator.nextInt(0, 3);
             switch (direction) {
-                // TODO integrate left, right etc. into the MapState enum?
                 // left
                 case 0:
+                    // checks whether position to the left is on the map and NULL, then writes a room on the map
                     if (currentPosition.x > 0 && roomPlacementMap[currentPosition.x - 1][currentPosition.y] == MapState.NULL) {
                         roomPlacementMap[currentPosition.x - 1][currentPosition.y] = isBossRoom ? MapState.BOSS_ROOM : MapState.PLACED;
                         placed++;
@@ -135,7 +143,7 @@ public abstract class Level implements Logic {
         }
     }
 
-    private DiscreteCoordinates randomPlacedCoords(MapState[][] roomPlacementMap) {
+    private DiscreteCoordinates randomPlacedPosition(MapState[][] roomPlacementMap) {
         int x = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length-1);
         int y = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length-1);
         while (roomPlacementMap[x][y] != MapState.PLACED) {
@@ -160,64 +168,6 @@ public abstract class Level implements Logic {
             freeSlots++;
         }
         return freeSlots;
-    }
-
-    private void printMapAlt(MapState [][] map) {
-        System.out.println("Generated map:");
-        System.out.print(" | ");
-        for (int x = 0; x < map.length; x++) {
-            System.out.print(x + " ");
-        }
-        System.out.println();
-        System.out.print("--|-");
-        for (int x = 0; x < map.length; x++) {
-            System.out.print("--");
-        }
-        System.out.println();
-        for (int y = 0; y < map.length; y++) {
-            System.out.print(map[0].length - y - 1 + " | ");
-            for (int x = 0; x < map.length; x++) {
-                System.out.print(map[x][y] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    private void printMap(MapState [][] map) {
-        System.out.println("Generated map:");
-        System.out.print(" | ");
-        for (int j = 0; j < map[0]. length; j++) {
-            System.out.print(j + " ");
-        }
-        System.out.println();
-        System.out.print("--|-");
-        for (int j = 0; j < map[0]. length; j++) {
-            System.out.print("--");
-        }
-        System.out.println();
-        for (int i = 0; i < map.length; i++) {
-            System.out.print(i + " | ");
-            for (int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    protected enum MapState {
-
-        NULL , // Empty space
-        PLACED , // The room has been placed but not yet explored by the room placement algorithm
-        EXPLORED , // The room has been placed and explored by the algorithm
-        BOSS_ROOM , // The room is a boss room
-        CREATED; // The room has been instantiated in the room map
-
-        @Override
-        public String toString() {
-            return Integer.toString(ordinal());
-        }
     }
 
     public void registerRooms(AreaGame parent){
@@ -254,6 +204,8 @@ public abstract class Level implements Logic {
                                      int keyId){
         roomsList[coords.x][coords.y].getRoomConnectors()[connector.getIndex()].lockWithKey(keyId);
     }
+
+    protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
 
     protected void setStartingRoom(DiscreteCoordinates coords){
         titleStartRoom = roomsList[coords.x][coords.y].getTitle();

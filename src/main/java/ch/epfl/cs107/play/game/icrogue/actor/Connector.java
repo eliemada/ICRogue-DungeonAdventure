@@ -29,7 +29,7 @@ public class Connector extends AreaEntity {
             (getOrientation().ordinal()+1)%2+1, getOrientation().ordinal()%2+1, this);
 
 
-    public static enum State {
+    public enum State {
         OPEN, CLOSED, LOCKED, INVISIBLE
     }
 
