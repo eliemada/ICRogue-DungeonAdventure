@@ -119,6 +119,5 @@ public class Turret extends Enemy implements Interactor {
         }
     }
 }
-
-
+ez
 
