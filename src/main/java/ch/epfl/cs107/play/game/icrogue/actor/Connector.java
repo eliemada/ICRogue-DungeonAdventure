@@ -59,30 +59,27 @@ public class Connector extends AreaEntity {
     public void setDestination(String destArea, DiscreteCoordinates destCoords) {
         this.destArea = destArea;
         this.destCoords = destCoords;
+        state = State.CLOSED;
     }
 
     public String getDestArea() {
         return destArea;
     }
 
+    public DiscreteCoordinates getDestCoords() {
+        return destCoords;
+    }
+
     public void lockWithKey(int keyId) {
-        this.keyId = keyId;
-        state = State.LOCKED;
+        if (state == State.CLOSED) {
+            state = State.LOCKED;
+            this.keyId = keyId;
+        }
     }
 
     public void close() {
-        state = State.CLOSED;
+        if (state == State.OPEN) state = State.CLOSED;
     }
-
-    public State getState() {
-        return state;
-    }
-
-    //TODO make this obsolete by more granular setters
-    public void setState(State state) {
-        this.state = state;
-    }
-
 
     /**
      * Renders itself on specified canvas.

@@ -241,7 +241,7 @@ public abstract class Level implements Logic {
     }
 
     protected void setRoomConnectorDestination(DiscreteCoordinates posOfRoom, String destination, ConnectorInRoom connector){
-        roomsList[posOfRoom.x][posOfRoom.y].getRoomConnectors()[connector.getIndex()].setDestination(destination, posArrival);
+        roomsList[posOfRoom.x][posOfRoom.y].getRoomConnectors()[connector.getIndex()].setDestination(destination, connector.getDestCoords());
     }
 
     protected void setRoomConnector(DiscreteCoordinates posOfRoom, String destination, ConnectorInRoom connector){

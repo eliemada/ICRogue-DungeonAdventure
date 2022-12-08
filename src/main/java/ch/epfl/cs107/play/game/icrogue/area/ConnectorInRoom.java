@@ -5,4 +5,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 public interface ConnectorInRoom {
     int getIndex();
     DiscreteCoordinates getDestination();
+
+    DiscreteCoordinates getDestCoords();
 }

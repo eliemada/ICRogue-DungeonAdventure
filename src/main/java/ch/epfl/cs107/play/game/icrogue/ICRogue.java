@@ -16,7 +16,6 @@ public class ICRogue extends AreaGame {
     public final static float      CAMERA_SCALE_FACTOR = 13.f;
     private     Keyboard        keyboard;
     private     Level           currentLevel;
-    private     ICRogueRoom     currentRoom;
     private     ICRoguePlayer   player;
     private final DiscreteCoordinates POS_ARRIVAL = new DiscreteCoordinates(4, 4);
 
@@ -35,9 +34,8 @@ public class ICRogue extends AreaGame {
 
     private void switchRoom() {
         // TODO find better way to hand down destArea and coords from connector to ICRogue
-        setCurrentArea(player.getDestArea(), false);
-        player.enterArea(getCurrentArea(), POS_ARRIVAL);
-        currentRoom = (ICRogueRoom) getCurrentArea();
+        setCurrentArea(player.getInsideConnector().getDestArea(), false);
+        player.enterArea(getCurrentArea(), player.getInsideConnector().getDestCoords());
     }
 
     @Override
@@ -56,7 +54,7 @@ public class ICRogue extends AreaGame {
             player.leaveArea();
             initLevel();
         }
-        if (player.isBetweenRooms()) {
+        if (player.getInsideConnector() != null) {
             switchRoom();
         }
         if(currentLevel.isOn()){

@@ -32,10 +32,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     private Sprite[][] copain;
     private boolean hasStaff = false;
-    private ArrayList<Integer> keyIds = new ArrayList<>();
+    private ArrayList<Integer> keychain = new ArrayList<>();
     private static final int MOVE_DURATION = 5;
-    private boolean isBetweenRooms = false;
-    private String destArea;
+    private Connector insideConnector = null;
     private Sprite [][] sprites;
     // crée un tableau de 4 animation
     private Animation[] animationsCopain;
@@ -68,19 +67,15 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     public boolean isAlive(){
         return !(healthPoints <= 0);
     }
-    public boolean isBetweenRooms() {
-        return isBetweenRooms;
-    }
-
-    public String getDestArea() {
-        return destArea;
+    public Connector getInsideConnector() {
+        return insideConnector;
     }
 
     @Override
     public void enterArea(Area area, DiscreteCoordinates position){
         super.enterArea(area, position);
         area.visit();
-        isBetweenRooms = false;
+        insideConnector = null;
     }
 
     @Override
@@ -104,9 +99,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private void touchedBy(Projectile projectile){
         healthPoints -= projectile.getDamage();
     }
-    private void ifKeyIsPressed(Button pressedKey){
 
-    }
     private void moveIfPressed(Orientation orientation, Button pressedKey,float deltatime){
         if(pressedKey.isDown()) {
             if (!isDisplacementOccurs()) {
@@ -115,7 +108,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 animationsMainPlayer[getOrientation().ordinal()].update(deltatime);
                 animationsCopain[getOrientation().ordinal()].update(deltatime);
             }
-
         }
     }
 
@@ -123,22 +115,22 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     public void draw(Canvas canvas) {
         shadow.draw(canvas);
         switch (getOrientation()) {
-            case UP :
+            case UP -> {
                 animationsMainPlayer[Orientation.UP.ordinal()].draw(canvas);
                 animationsCopain[Orientation.UP.ordinal()].draw(canvas);
-                break;
-            case DOWN :
+            }
+            case DOWN -> {
                 animationsMainPlayer[Orientation.DOWN.ordinal()].draw(canvas);
                 animationsCopain[Orientation.DOWN.ordinal()].draw(canvas);
-                break;
-            case LEFT :
+            }
+            case LEFT -> {
                 animationsMainPlayer[Orientation.LEFT.ordinal()].draw(canvas);
                 animationsCopain[Orientation.LEFT.ordinal()].draw(canvas);
-                break;
-            case RIGHT:
+            }
+            case RIGHT -> {
                 animationsMainPlayer[Orientation.RIGHT.ordinal()].draw(canvas);
                 animationsCopain[Orientation.RIGHT.ordinal()].draw(canvas);
-                break;
+            }
         }
         shownHp.draw(canvas);
     }
@@ -205,7 +197,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         public void interactWith(Key key, boolean isCellInteraction){
             if (wantsCellInteraction()){
                 key.collect();
-                keyIds.add(key.getId());
+                keychain.add(key.getId());
             }
         }
 
@@ -216,11 +208,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         public void interactWith(Connector connector, boolean isCellInteraction){
             // if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
             if (wantsViewInteraction()){
-                connector.open(keyIds);
+                connector.open(keychain);
             }
             if (wantsCellInteraction() && !isDisplacementOccurs()){
-                isBetweenRooms = true;
-                destArea = connector.getDestArea();
+                insideConnector = connector;
                 leaveArea();
             }
 

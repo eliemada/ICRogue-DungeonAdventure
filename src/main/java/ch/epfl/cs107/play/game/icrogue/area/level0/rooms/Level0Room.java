@@ -37,6 +37,10 @@ public class Level0Room extends ICRogueRoom{
         public Orientation getOrientation(){
             return orientation;
         }
+        @Override
+        public DiscreteCoordinates getDestCoords(){
+            return destination;
+        }
 
         private static ArrayList<Orientation> getAllConnectorsOrientation() {
             ArrayList <Orientation > orientations = new ArrayList < > ();
