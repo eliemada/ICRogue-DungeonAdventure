@@ -228,6 +228,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         public void interactWith(Arrow arrow, boolean isCellInteraction){
 
             if(isCellInteraction){
+                arrow.setDamageSound();
                 touchedBy(arrow);
                 arrow.consume();
             }

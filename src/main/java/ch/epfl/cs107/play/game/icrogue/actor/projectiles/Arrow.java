@@ -13,7 +13,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Audio;
-import ch.epfl.cs107.play.window.Canvas;
 
 /**
  * Arrow class represents an arrow that can be fired from a bow
@@ -23,7 +22,8 @@ import ch.epfl.cs107.play.window.Canvas;
  */
 public class Arrow extends Projectile implements Acoustics {
     // SoundAcoustics object for the sound effect of the arrow being fired
-    private SoundAcoustics fireBallSound;
+    private SoundAcoustics arrowSound;
+    private SoundAcoustics damageSound;
     // The orientation of the arrow
     private Orientation    orientation;
 
@@ -41,8 +41,10 @@ public class Arrow extends Projectile implements Acoustics {
         super(room, orientation, position, 5, 10);
         // Store the orientation of the arrow
         this.orientation = orientation;
-        // Initialize the fireBallSound object with the sound effect and its parameters
-        fireBallSound = new SoundAcoustics(ResourcePath.getSound("bow_shoot"), 0.5f, false, false, false,
+        // Initialize the arrowSound object with the sound effect and its parameters
+        arrowSound = new SoundAcoustics(ResourcePath.getSound("bow_shoot"), 0.5f, false, false, false,
+                false);
+        damageSound = new SoundAcoustics(ResourcePath.getSound("damage"), 0.5f, false, false, false,
                 false);
     }
 
@@ -85,9 +87,12 @@ public class Arrow extends Projectile implements Acoustics {
                 new RegionOfInterest(32 * orientation.ordinal(), 0, 32, 32),
                 new Vector(0, 0)));
         // Tell the fireBallSound object that the sound should be played
-        fireBallSound.shouldBeStarted();
+        arrowSound.shouldBeStarted();
     }
 
+    public void setDamageSound(){
+        damageSound.shouldBeStarted();
+    }
     /**
      * Check if the arrow is interactable
      *
@@ -107,8 +112,9 @@ public class Arrow extends Projectile implements Acoustics {
     public void bip(Audio audio) {
         // If the sound hasn't been played yet, play it and set soundHasBeenExecuted to true
         if (!soundHasBeenExecuted) {
-            fireBallSound.bip(audio);
+            arrowSound.bip(audio);
             soundHasBeenExecuted = true;
         }
+        damageSound.bip(audio);
     }
 }
