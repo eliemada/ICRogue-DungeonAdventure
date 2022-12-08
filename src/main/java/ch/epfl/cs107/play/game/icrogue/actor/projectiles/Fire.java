@@ -7,10 +7,12 @@ import ch.epfl.cs107.play.game.actor.Acoustics;
 import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
+import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -26,6 +28,8 @@ import java.util.List;
 public class Fire extends Projectile implements Acoustics {
     private              SoundAcoustics fireBallSound;
     private final static int            DEFAULT_DAMAGE_FIRE = 1;
+    private ICRogueFireInteractionHandler handler;
+
     private final static int DEFAULT_MOVE_DURATION = 5;
     private static final int ANIMATION_DURATION    = 5;
     private boolean soundHasBeenExecuted = false;
@@ -74,6 +78,7 @@ public class Fire extends Projectile implements Acoustics {
         spriteFire = new Sprite("zelda/fire",1f,1f,this,new RegionOfInterest(0,0,16,16),new Vector(0,0));
         fireBallSound = new SoundAcoustics(ResourcePath.getSound("fireBall"),0.5f,false,false,false,false);
         fireBallSound.shouldBeStarted();
+        handler = new ICRogueFireInteractionHandler();
     }
     public Fire(Area room, Orientation orientation, DiscreteCoordinates position) {
         this(room, orientation, position, DEFAULT_DAMAGE_FIRE, DEFAULT_MOVE_DURATION);
@@ -153,6 +158,28 @@ public class Fire extends Projectile implements Acoustics {
             soundHasBeenExecuted = true;}
     }
 
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction((ICRogueFireInteractionHandler)handler, isCellInteraction);
+    }
+
+    private class ICRogueFireInteractionHandler implements ICRogueInteractionHandler {
+        @Override
+        public void interactWith(Arrow arrow, boolean isCellInteraction) {
+            if (wantsViewInteraction()) {
+                arrow.consume();
+            }
+        }
+
+        @Override
+        public void interactWith(ICRogueBehavior.ICRogueCell cell, boolean isCellInteraction) {
+            if (cell.is(ICRogueBehavior.ICRogueCellType.WALL) || cell.is(ICRogueBehavior.ICRogueCellType.HOLE)) {
+                acceptInteraction(this, isCellInteraction);
+                consume();
+            }
+
+        }
+    }
 
 
 
@@ -160,4 +187,6 @@ public class Fire extends Projectile implements Acoustics {
 
 
 
-}
+
+
+    }
