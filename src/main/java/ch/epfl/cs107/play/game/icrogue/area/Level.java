@@ -8,23 +8,45 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Level is an abstract class that represents any level in the game.
+ * It has its rooms as an attribute and handles the random generation of rooms.
+ * The specific room types are implemented in each concrete level.
+ * Level.java is a signal that is On if the level is completed.
+ */
 public abstract class Level implements Logic {
     private ICRogueRoom[][] roomsList;
     private DiscreteCoordinates posBossRoom = new DiscreteCoordinates(0, 0);
     private String titleStartRoom;
 
-    protected Level (int width , int height) {
-        generateFixedMap(width, height);
+
+    /**
+     * Minimal constructor for Level which does not place / create any rooms.
+     * @param width (int): width of the roomMap
+     * @param height (int): height of the roomMap
+     */
+    protected Level(int width, int height) {
+        createRoomsList(width, height);
     }
 
-    protected Level () {}
+    /**
+     * Constructor for Level leveraging the random room placement.
+     * @param roomsDistribution : the distribution of the rooms in the level.
+     */
+    protected Level(int[] roomsDistribution) {
+        randomPlaceGen(roomsDistribution);
+    }
 
+
+    /**
+     * Possible states of rooms on the map.
+     */
     protected enum MapState {
 
-        NULL , // Empty space
-        PLACED , // The room has been placed but not yet explored by the room placement algorithm
-        EXPLORED , // The room has been placed and explored by the algorithm
-        BOSS_ROOM , // The room is a boss room
+        NULL, // Empty space
+        PLACED, // The room has been placed but not yet explored by the room placement algorithm
+        EXPLORED, // The room has been placed and explored by the algorithm
+        BOSS_ROOM, // The room is a boss room
         CREATED; // The room has been instantiated in the room map
 
         @Override
@@ -33,38 +55,76 @@ public abstract class Level implements Logic {
         }
     }
 
-    protected void generateRandomMap(int[] roomsDistribution) {
+    /**
+     * Registers all the rooms in the level with the parent AreaGame.
+     * @param parent (AreaGame): Owner / parent of the level.
+     */
+    public void registerRooms(AreaGame parent) {
+        for (ICRogueRoom[] rooms : roomsList) {
+            for (ICRogueRoom room : rooms) {
+                if (room != null) parent.addArea(room);
+            }
+        }
+    }
+
+    /**
+     * Returns the title of the level's starting / spawn room.
+     * @return (String): the title of the starting room.
+     */
+    public String getTitleStartRoom() {
+        return titleStartRoom;
+    }
+
+    /**
+     * Creates an empty fixed size list for ICRogueRoom's.
+     * @param width (int): width of the roomMap
+     * @param height (int): height of the roomMap
+     */
+    private void createRoomsList(int width, int height) {
+        roomsList = new ICRogueRoom[width][height];
+    }
+
+    /**
+     * Handles the pseudorandom placement of rooms on the level's map.
+     * Rooms are mapped, created connected.
+     * @param roomsDistribution : the requested distribution of the rooms in the level.
+     */
+    private void randomPlaceGen(int[] roomsDistribution) {
         int nbRooms = Arrays.stream(roomsDistribution).sum();
-        generateFixedMap(nbRooms, nbRooms);
-        MapState[][] mappedRooms = generateRandomRoomPlacement(nbRooms);
-        generateRooms(roomsDistribution, mappedRooms);
+        createRoomsList(nbRooms, nbRooms);
+        MapState[][] mappedRooms = mapRooms(nbRooms);
+        placeRooms(roomsDistribution, mappedRooms);
         for (ICRogueRoom[] rooms : roomsList)
             for (ICRogueRoom room : rooms)
                 if (room != null)
                     setupConnectors(mappedRooms, room);
     }
 
-    private void generateRooms(int[] roomsDistribution, MapState[][] mappedRooms) {
+    /**
+     * Places the different rooms pseudorandomly in potential positions found on the map.
+     * @param roomsDistribution : the requested distribution of the rooms in the level.
+     * @param mappedPlaces : the map of potential places for rooms in the level.
+     */
+    private void placeRooms(int[] roomsDistribution, MapState[][] mappedPlaces) {
         for (int i = 0; i <= roomsDistribution.length; i++) {
             // non-boss rooms (rooms in the distribution)
             if (i < roomsDistribution.length) {
                 // index all rooms that are PLACED or EXPLORED
                 ArrayList<DiscreteCoordinates> potentialMapIndexes = new ArrayList<>();
-                for (int x = 0; x < mappedRooms.length; x++)
-                    for (int y = 0; y < mappedRooms[x].length; y++)
-                        if ((mappedRooms[x][y] == MapState.PLACED) || (mappedRooms[x][y] == MapState.EXPLORED))
+                for (int x = 0; x < mappedPlaces.length; x++)
+                    for (int y = 0; y < mappedPlaces[x].length; y++)
+                        if ((mappedPlaces[x][y] == MapState.PLACED) || (mappedPlaces[x][y] == MapState.EXPLORED))
                             potentialMapIndexes.add(new DiscreteCoordinates(x, y));
                 // place rooms pseudorandomly in available spots
                 for (DiscreteCoordinates position : RandomHelper.chooseKInList(roomsDistribution[i], potentialMapIndexes)) {
                     createRoom(i, position);
-                    mappedRooms[position.x][position.y] = MapState.CREATED;
+                    mappedPlaces[position.x][position.y] = MapState.CREATED;
                 }
-            }
-            else {
+            } else {
                 DiscreteCoordinates position = new DiscreteCoordinates(0, 0);
-                for (int x = 0; x < mappedRooms.length; x++)
-                    for (int y = 0; y < mappedRooms[x].length; y++)
-                        if ((mappedRooms[x][y] == MapState.BOSS_ROOM))
+                for (int x = 0; x < mappedPlaces.length; x++)
+                    for (int y = 0; y < mappedPlaces[x].length; y++)
+                        if ((mappedPlaces[x][y] == MapState.BOSS_ROOM))
                             position = new DiscreteCoordinates(x, y);
                 createRoom(-1, position);
                 posBossRoom = position;
@@ -72,9 +132,20 @@ public abstract class Level implements Logic {
         }
     }
 
+    /**
+     * Creates a room in the level's map. Can only be implemented by each specific Level.
+     * @param type (int): the type of room to create.
+     * @param position (DiscreteCoordinates): the position of the room on the map.
+     */
     protected abstract void createRoom(int type, DiscreteCoordinates position);
 
-    protected MapState [][] generateRandomRoomPlacement(int roomsToPlace) {
+    /**
+     * Initializes a map for potential positions, then
+     * maps the potential positions for any rooms in the level.
+     * @param roomsToPlace (int): the number of rooms to find spots for.
+     * @return (MapState[][]): a map of potential places for rooms in the level.
+     */
+    private MapState[][] mapRooms(int roomsToPlace) {
         MapState[][] roomPlacementMap = new MapState[roomsToPlace][roomsToPlace];
 
         // initialize map
@@ -89,22 +160,35 @@ public abstract class Level implements Logic {
         return roomPlacementMap;
     }
 
+    /**
+     * Maps the potential positions for any rooms in the level and the boss room.
+     * @param roomPlacementMap (MapState[][]): the empty RoomMap.
+     * @param roomsToPlace (int): the number of rooms to find spots for.
+     * @param isBossRoom (boolean): flag to indicate the boss room, needed for recursive calling.
+     */
     private void fillMap(MapState[][] roomPlacementMap, int roomsToPlace, boolean isBossRoom) {
         while (roomsToPlace > 0) {
             DiscreteCoordinates currentPosition = randomPlacedPosition(roomPlacementMap);
-            int freeSlots = calcFreeSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
+            int freeSlots = freeNeighbourSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
             int toPlace;
             if (roomsToPlace == 1) toPlace = 1;
             else // RandomHelper expects origin and bound to be different
-                toPlace = RandomHelper.roomGenerator.nextInt(1 , Integer.min(roomsToPlace, freeSlots));
+                toPlace = RandomHelper.roomGenerator.nextInt(1, Integer.min(roomsToPlace, freeSlots));
             fillMapAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
             roomsToPlace -= toPlace;
             roomPlacementMap[currentPosition.x][currentPosition.y] = MapState.EXPLORED;
         }
         // recursive call (with flag protection) for the boss room
-        if(!isBossRoom) fillMap(roomPlacementMap, 1, true);
+        if (!isBossRoom) fillMap(roomPlacementMap, 1, true);
     }
 
+    /**
+     * Maps the potential positions for rooms around the current position on the map.
+     * @param roomPlacementMap (MapState[][]): the RoomMap.
+     * @param currentPosition (DiscreteCoordinates): the current position on the map.
+     * @param toPlace (int): the number of rooms to place around the current position.
+     * @param isBossRoom (boolean): indicates the boss room.
+     */
     private void fillMapAround(MapState[][] roomPlacementMap, DiscreteCoordinates currentPosition, int toPlace, boolean isBossRoom) {
         int placed = 0;
         while (placed < toPlace) {
@@ -143,9 +227,14 @@ public abstract class Level implements Logic {
         }
     }
 
+    /**
+     * Returns a pseudorandom position on the map that is PLACED.
+     * @param roomPlacementMap (MapState[][]): the filled RoomMap.
+     * @return (DiscreteCoordinates): a random position on the map that has been PLACED.
+     */
     private DiscreteCoordinates randomPlacedPosition(MapState[][] roomPlacementMap) {
-        int x = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length-1);
-        int y = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length-1);
+        int x = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length - 1);
+        int y = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length - 1);
         while (roomPlacementMap[x][y] != MapState.PLACED) {
             x = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length);
             y = RandomHelper.roomGenerator.nextInt(0, roomPlacementMap.length);
@@ -153,7 +242,14 @@ public abstract class Level implements Logic {
         return new DiscreteCoordinates(x, y);
     }
 
-    private int calcFreeSlots(MapState[][] roomPlacementMap, int x, int y) {
+    /**
+     * Returns the number of free slots around a position on the map.
+     * @param roomPlacementMap (MapState[][]): the RoomMap.
+     * @param x (int): the x coordinate of the position to check.
+     * @param y (int): the y coordinate of the position to check.
+     * @return (int): the number of free (NULL) slots around the position.
+     */
+    private int freeNeighbourSlots(MapState[][] roomPlacementMap, int x, int y) {
         int freeSlots = 0;
         if (x > 0 && roomPlacementMap[x - 1][y] == MapState.NULL) {
             freeSlots++;
@@ -170,47 +266,56 @@ public abstract class Level implements Logic {
         return freeSlots;
     }
 
-    public void registerRooms(AreaGame parent){
-        for (ICRogueRoom[] rooms: roomsList) {
-            for (ICRogueRoom room: rooms) {
-                if (room != null) parent.addArea(room);
-            }
-        }
-    }
-
-    protected void generateFixedMap(int width,int height) {
-        roomsList = new ICRogueRoom[width][height];
-    }
-
-    public String getTitleStartRoom() {
-        return titleStartRoom;
-    }
-
-    protected void setRoom(DiscreteCoordinates posRoom, ICRogueRoom room){
+    /**
+     * Adds a room to the level at the given position.
+     * @param posRoom (DiscreteCoordinates): The position of the room.
+     * @param room (Room): The room to add.
+     */
+    protected void setRoom(DiscreteCoordinates posRoom, ICRogueRoom room) {
         roomsList[posRoom.x][posRoom.y] = room;
     }
 
-    protected void setRoomConnectorDestination(DiscreteCoordinates posOfRoom, String destination, ConnectorInRoom connector){
+    /**
+     * Sets up the connectors of a room by checking the surrounding rooms on the map.
+     * Has to be implemented by the specific Level.
+     * @param roomsMapped (MapState[][]): the filled RoomMap.
+     * @param room (ICRogueRoom): the connectors who should be set up.
+     */
+    protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
+
+    /**
+     * Sets a Connectors destination room.
+     * @param posOfRoom (DiscreteCoordinates): the position of the room the connector belongs to.
+     * @param destination (String): the name of the destination room.
+     * @param connector (ConnectorInRoom): the connector whose destination should be set.
+     */
+    protected void setRoomConnectorDest(DiscreteCoordinates posOfRoom, String destination, ConnectorInRoom connector) {
         roomsList[posOfRoom.x][posOfRoom.y].getRoomConnectors()[connector.getIndex()].setDestination(destination, connector.getDestCoords());
     }
 
-    protected void setRoomConnector(DiscreteCoordinates posOfRoom, String destination, ConnectorInRoom connector){
-        setRoomConnectorDestination(posOfRoom, destination, connector);
-        roomsList[posOfRoom.x][posOfRoom.y].getRoomConnectors()[connector.getIndex()].close();
-
-    }
-
+    /**
+     * Locks a connector with a given key id.
+     * @param coords (DiscreteCoordinates): the position of the connector's room.
+     * @param connector (ConnectorInRoom): the connector.
+     * @param keyId (int): the id of the key.
+     */
     protected void lockRoomConnector(DiscreteCoordinates coords, ConnectorInRoom connector,
-                                     int keyId){
+                                     int keyId) {
         roomsList[coords.x][coords.y].getRoomConnectors()[connector.getIndex()].lockWithKey(keyId);
     }
 
-    protected abstract void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room);
-
-    protected void setStartingRoom(DiscreteCoordinates coords){
+    /**
+     * Sets the level's starting room by coordinates.
+     * @param coords (DiscreteCoordinates): the coordinates of the starting room.
+     */
+    protected void setStartingRoom(DiscreteCoordinates coords) {
         titleStartRoom = roomsList[coords.x][coords.y].getTitle();
     }
 
+    /**
+     * Signals true if the level is completed.
+     * @return (boolean): true if the level is completed.
+     */
     @Override
     public boolean isOn() {
         return (roomsList[posBossRoom.x][posBossRoom.y] != null) &&
@@ -223,7 +328,7 @@ public abstract class Level implements Logic {
     }
 
     @Override
-    public float getIntensity(){
+    public float getIntensity() {
         return isOn() ? 1.0f : 0.0f;
     }
 
