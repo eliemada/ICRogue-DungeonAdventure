@@ -303,7 +303,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             }
         }
 
-        }
 
+    }
 
 }

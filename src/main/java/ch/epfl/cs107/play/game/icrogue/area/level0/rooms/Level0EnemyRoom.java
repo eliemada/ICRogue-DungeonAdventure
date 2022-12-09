@@ -12,6 +12,8 @@ import java.util.List;
 public class Level0EnemyRoom extends Level0Room implements Logic {
 
 
+
+
     List<Enemy> enemies = new ArrayList<>();
 
     public Level0EnemyRoom(DiscreteCoordinates givenRoomCoordinates) {
@@ -42,5 +44,7 @@ public class Level0EnemyRoom extends Level0Room implements Logic {
         }
         return super.isOn();
     }
+
+
 }
 
