@@ -26,12 +26,14 @@ import java.util.List;
 
 
 public class Fire extends Projectile implements Acoustics {
-    private              SoundAcoustics fireBallSound;
-    private final static int            DEFAULT_DAMAGE_FIRE = 1;
-    private ICRogueFireInteractionHandler handler;
-
     private final static int DEFAULT_MOVE_DURATION = 5;
     private static final int ANIMATION_DURATION    = 5;
+    private final static int            DEFAULT_DAMAGE_FIRE = 1;
+
+    private              SoundAcoustics fireBallSound;
+    private ICRogueFireInteractionHandler handler;
+
+
     private boolean soundHasBeenExecuted = false;
     private int damage, duration;
     private Sprite [] sprites = Sprite.extractSprites("zelda/fire",
@@ -39,26 +41,8 @@ public class Fire extends Projectile implements Acoustics {
             this , 16, 16);
     Animation animation = new Animation(3,sprites);
 
-    Sprite spriteFire;
-    //Sprite myBall;
-    //private Sprite fireAnimated[] = new Sprite[7];
-    // crée un tableau de 4 animation
+    //Sprite spriteFire;
 
-    /**
-     *
-     * @Goal Be able to fill a list with all the different fire sprite possible !
-     * Currently stuck, because I can not update fire !
-     */
-    /**
-    public void fillTheFireList() {
-        for (int i = 0; i <= fireAnimated.length-1; i++) {
-            fireAnimated[i] = new Sprite("zelda/fire", 1f, 1f, this,
-                    new RegionOfInterest(16 * i, 0, 16, 16),
-                    new Vector(0f, 0f));
-            myBall          = (fireAnimated[i]);
-
-        }
-    }*/
 
 
     /**
@@ -75,7 +59,7 @@ public class Fire extends Projectile implements Acoustics {
         super(room, orientation, position);
         damage = givenDamage;
         duration = givenDuration;
-        spriteFire = new Sprite("zelda/fire",1f,1f,this,new RegionOfInterest(0,0,16,16),new Vector(0,0));
+        //spriteFire = new Sprite("zelda/fire",1f,1f,this,new RegionOfInterest(0,0,16,16),new Vector(0,0));
         fireBallSound = new SoundAcoustics(ResourcePath.getSound("fireBall"),0.5f,false,false,false,false);
         fireBallSound.shouldBeStarted();
         handler = new ICRogueFireInteractionHandler();

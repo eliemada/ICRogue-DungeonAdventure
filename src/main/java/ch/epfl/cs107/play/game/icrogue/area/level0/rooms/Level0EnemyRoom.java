@@ -21,7 +21,6 @@ public class Level0EnemyRoom extends Level0Room implements Logic {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
     }
 
     protected void addEnemy(Enemy givenEnemy) {
