@@ -30,6 +30,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     // Constant for the duration of an animation
     private static final int ANIMATION_DURATION = 2;
 
+    private static final int HEALTHPOINTS = 30;
+
     // Keyboard to get user input
     private final Keyboard keyboard;
 
@@ -72,13 +74,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     // ICRogueInteractionHandler for the player
     private ICRogueInteractionHandler handler;
 
+
     // Constructor for the ICRoguePlayer class
     public ICRoguePlayer(Area room, Orientation orientation, DiscreteCoordinates position
     ) {
         super(room, orientation, position);
 
         // Initialize health points to 10
-        healthPoints = 30;
+        healthPoints = HEALTHPOINTS;
 
         // Initialize the TextGraphics to show the player's health points
         shownHp = new TextGraphics(Integer.toString((int)healthPoints), 0.6f, Color.RED);
@@ -190,6 +193,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         shownHp.draw(canvas);
     }
 
+    private void heal(){
+        healthPoints +=5;
+    }
 
 
     @Override
@@ -290,8 +296,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
         public void interactWith(Heart heart, boolean isCellInteraction){
             if (wantsCellInteraction()&& !heart.isCollected()){
-                heart.collect();
-                healthPoints += 5;
+                if (getHp() + 5 <= 30) {
+                    heart.collect();
+                     heal();
+                }
             }
         }
 
