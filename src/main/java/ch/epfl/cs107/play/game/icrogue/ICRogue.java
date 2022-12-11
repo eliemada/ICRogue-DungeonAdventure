@@ -14,6 +14,9 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
+/**
+ * ICRogue is the main class of the game
+ */
 public class ICRogue extends AreaGame {
     public final static float      CAMERA_SCALE_FACTOR = 13.f;
     private     Keyboard        keyboard;
@@ -25,7 +28,7 @@ public class ICRogue extends AreaGame {
 
 
     /**
-     * Add all the areas
+     * Initialize the game: Loads the first level and creates the player.
      */
     private void initLevel() {
         level = new Level0();
@@ -38,12 +41,20 @@ public class ICRogue extends AreaGame {
         hpBar = new HpBar(new Vector(0,9.5f),player);
     }
 
+    /**
+     * Switches the player to a room that is given by the connector he is standing in.
+     */
     private void switchRoom() {
-        // TODO find better way to hand down destArea and coords from connector to ICRogue
         setCurrentArea(player.getInsideConnector().getDestArea(), false);
         player.enterArea(getCurrentArea(), player.getInsideConnector().getDestCoords());
     }
 
+    /**
+     * Starts the game.
+     * @param window     (Window): display context. Not null
+     * @param fileSystem (FileSystem): given file system. Not null
+     * @return
+     */
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
@@ -53,6 +64,9 @@ public class ICRogue extends AreaGame {
         return false;
     }
 
+    /**
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

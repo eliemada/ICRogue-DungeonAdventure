@@ -9,10 +9,16 @@ import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurretRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+/**
+ * Level 0
+ */
 public class Level0 extends Level {
     private final int PART_1_KEY_ID = 1;
     private final int BOSS_KEY_ID = 3;
 
+    /**
+     * Default Level0 constructor.
+     */
     public Level0() {
         super(Level0RoomTypes.getRoomsDistribution());
 
@@ -22,6 +28,9 @@ public class Level0 extends Level {
 //        setStartingRoom(new DiscreteCoordinates(1, 1));
     }
 
+    /**
+     * Room types and counts of this level.
+     */
     protected enum Level0RoomTypes {
         TURRET (2),
         STAFF (2),
@@ -34,6 +43,10 @@ public class Level0 extends Level {
             this.count = count;
         }
 
+        /**
+         * Unifies and returns the distribution of room types for this level.
+         * @return the distribution of room types
+         */
         private static int[] getRoomsDistribution () {
             Level0RoomTypes[] types = Level0RoomTypes.values();
             int[] roomsDistribution = new int[types.length];
@@ -44,10 +57,15 @@ public class Level0 extends Level {
         }
     }
 
+    /**
+     * Sets up destination and state of connectors in a given room
+     * respecting the provided map of rooms.
+     * @param roomsMapped (MapState[][]): the filled RoomMap.
+     * @param room        (ICRogueRoom): the room in which connectors should be set up.
+     */
     @Override
     protected void setupConnectors(MapState[][] roomsMapped, ICRogueRoom room) {
         // scan neighbors
-
         DiscreteCoordinates pos = room.getRoomCoordinates();
         for (int i = 0; i < Level0Connectors.values().length; i++) {
             DiscreteCoordinates neighborPos = pos.jump(Level0Connectors.values()[i].getOrientation().toVector());
@@ -65,6 +83,11 @@ public class Level0 extends Level {
 
     }
 
+    /**
+     * Creates a room of a given type at the given position.
+     * @param type     (int): the type of room to create. (See enum Level0RoomTypes)
+     * @param position (DiscreteCoordinates): the position of the room on the map.
+     */
     @Override
     protected void createRoom(int type, DiscreteCoordinates position) {
         if (type == 4) {
