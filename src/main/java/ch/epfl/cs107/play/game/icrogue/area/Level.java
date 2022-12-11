@@ -171,7 +171,7 @@ public abstract class Level implements Logic {
             DiscreteCoordinates currentPosition = randomPlacedPosition(roomPlacementMap);
             int freeSlots = freeNeighbourSlots(roomPlacementMap, currentPosition.x, currentPosition.y);
             int toPlace;
-            if (roomsToPlace == 1) toPlace = 1;
+            if ((roomsToPlace == 1) || (freeSlots == 1)) toPlace = 1;
             else // RandomHelper expects origin and bound to be different
                 toPlace = RandomHelper.roomGenerator.nextInt(1, Integer.min(roomsToPlace, freeSlots));
             fillMapAround(roomPlacementMap, currentPosition, toPlace, isBossRoom);
