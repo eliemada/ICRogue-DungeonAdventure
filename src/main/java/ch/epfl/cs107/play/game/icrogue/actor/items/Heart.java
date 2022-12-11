@@ -9,24 +9,15 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Staff extends Item{
+public class Heart extends Item{
 
-    private Sprite [] staffSprite = Sprite.extractSprites("zelda/staff",
+    private Sprite[] hearSprite = Sprite.extractSprites("zelda/heart",
             8, .5f, .5f,
-            this , 32, 32);
-    Animation animation = new Animation(3,staffSprite);
+            this , 16, 16);
+    Animation animation = new Animation(3,hearSprite);
 
-    /**
-     * @author Elie BRUNO (elie.bruno@epfl.ch)
-     * @Brief Constructor of the Staff, that extends the Class Item
-     * @param area
-     * @param orientation
-     * @param position
-     */
-    public Staff(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public Heart(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-        //setSprite(new Sprite("zelda/staff_water.icon", .5f, .5f, this));
-
     }
 
     @Override
@@ -34,30 +25,12 @@ public class Staff extends Item{
         super.update(deltatime);
         animation.update(deltatime);
     }
+
     @Override
     public void draw(Canvas canvas) {
         animation.draw(canvas);
     }
 
-    /**
-     * @author Elie BRUNO (elie.bruno@epfl.ch)
-     */
-    @Override
-    public boolean isViewInteractable() {
-        return true;
-    }
-
-    /**
-     * @author Elie BRUNO (elie.bruno@epfl.ch)
-     */
-    @Override
-    public boolean takeCellSpace() {
-        return true;
-    }
-
-    /**
-     * @author Elie BRUNO (elie.bruno@epfl.ch)
-     */
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this,isCellInteraction);

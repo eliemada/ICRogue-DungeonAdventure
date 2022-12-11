@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.icrogue;
 
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.icrogue.actor.HpBar;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
@@ -9,6 +10,7 @@ import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
@@ -18,18 +20,22 @@ public class ICRogue extends AreaGame {
     private     Level           currentLevel;
     private     ICRoguePlayer   player;
     private final DiscreteCoordinates POS_ARRIVAL = new DiscreteCoordinates(4, 4);
+    private HpBar hpBar;
+    private Level0 level;
+
 
     /**
      * Add all the areas
      */
     private void initLevel() {
-        currentLevel = new Level0();
-        currentLevel.registerRooms(this);
+        level = new Level0();
+        level.registerRooms(this);
         // TODO what does forceBegin mean?
-        setCurrentArea(currentLevel.getTitleStartRoom(), false);
+        setCurrentArea(level.getTitleStartRoom(), false);
         player = new ICRoguePlayer(getCurrentArea(), Orientation.UP, POS_ARRIVAL);
         player.enterArea(getCurrentArea(), POS_ARRIVAL);
         keyboard= getCurrentArea().getKeyboard();
+        hpBar = new HpBar(new Vector(0,9.5f),player);
     }
 
     private void switchRoom() {
@@ -57,7 +63,7 @@ public class ICRogue extends AreaGame {
         if (player.getInsideConnector() != null) {
             switchRoom();
         }
-        if(currentLevel.isOn()){
+        if(level.isOn()){
             System.out.println("Win!");
             end();
         }
@@ -65,8 +71,12 @@ public class ICRogue extends AreaGame {
             gameOver();
             end();
         }
+        getCurrentArea().registerActor(hpBar);
+
+        hpBar.update(deltaTime);
         // TODO delete below tests
 //        if ((currentRoom != null) && !currentRoom.isOff()) System.out.println("!isOff");
+
     }
 
     public void gameOver(){
