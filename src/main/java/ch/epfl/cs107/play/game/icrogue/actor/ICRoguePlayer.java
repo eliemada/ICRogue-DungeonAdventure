@@ -4,10 +4,7 @@ import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Heart;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
+import ch.epfl.cs107.play.game.icrogue.actor.items.*;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Arrow;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Projectile;
@@ -244,10 +241,16 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     }
 
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
+
         public void interactWith(Cherry cherry,boolean isCellInteraction){
-            if (wantsCellInteraction()) cherry.collect();
+            if (wantsCellInteraction() && isCellInteraction) cherry.collect();
         }
 
+        /**
+         * Interact with a staff (item)
+         * @param staff (Staff) : the staff the player is interacting with
+         * @param isCellInteraction
+         */
         public void interactWith(Staff staff, boolean isCellInteraction){
             if (wantsViewInteraction()){
                 staff.collect();
@@ -255,23 +258,33 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             }
         }
 
+        /**
+         * Interact with a key (item)
+         * @param key (Key) : the key that the player is interacting with
+         * @param isCellInteraction
+         */
         public void interactWith(Key key, boolean isCellInteraction){
-            if (wantsCellInteraction()){
+            if (wantsCellInteraction() && isCellInteraction){
                 key.collect();
                 keychain.add(key.getId());
             }
         }
 
-        // If the player is interacting remotely, it tries to unlock the connector (the connector
-        // changes from locked to open if the player is in possession of the associated key)
-        // If it is in touch/contact interaction and not moving
-        // (!isDisplacementOccurs()), it can transit to the destination of the connectors.
+        /**
+         * If the player is interacting remotely, he tries to unlock the connector (the connector
+         * changes from locked to open if the player is in possession of the associated key)
+         * If it is in touch/contact interaction and not moving,
+         * it can transit to the destination of the connector.
+         * @param connector
+         * @param isCellInteraction
+         */
+        //
         public void interactWith(Connector connector, boolean isCellInteraction){
-            // if (connector.isCellInteractable()) acceptInteraction(this, isCellInteraction);
+
             if (wantsViewInteraction()){
                 connector.open(keychain);
             }
-            if (wantsCellInteraction() && !isDisplacementOccurs()){
+            if (wantsCellInteraction() && isCellInteraction && !isDisplacementOccurs()){
                 insideConnector = connector;
                 leaveArea();
             }
@@ -294,8 +307,22 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
                 arrow.consume();
             }
         }
+
+        /**
+         * If the player steps on hellfire, extinguish it and take damage.
+         * The hellfire does not move and is therefore not a projectile.
+         * @param hellfire the hellfire that the player is stepping on
+         * @param isCellInteraction
+         */
+        public void interactWith(HellFire hellfire, boolean isCellInteraction){
+            if(isCellInteraction){
+                healthPoints -= hellfire.getDamage();
+                hellfire.collect();
+            }
+        }
+
         public void interactWith(Heart heart, boolean isCellInteraction){
-            if (wantsCellInteraction()&& !heart.isCollected()){
+            if (wantsCellInteraction()&& isCellInteraction){
                 if (getHp() + 5 <= 30) {
                     heart.collect();
                      heal();

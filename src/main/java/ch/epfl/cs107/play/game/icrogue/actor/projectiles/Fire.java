@@ -1,7 +1,4 @@
-package ch.epfl.cs107.play.game.icrogue.actor.projectiles;/*
- *	Author:      Leon Petrinos
- *	Date:
- */
+package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 
 import ch.epfl.cs107.play.game.actor.Acoustics;
 import ch.epfl.cs107.play.game.actor.SoundAcoustics;
@@ -28,7 +25,7 @@ import java.util.List;
 public class Fire extends Projectile implements Acoustics {
     private final static int DEFAULT_MOVE_DURATION = 5;
     private static final int ANIMATION_DURATION    = 5;
-    private final static int            DEFAULT_DAMAGE_FIRE = 1;
+    private final static int DEFAULT_DAMAGE_FIRE = 1;
 
     private              SoundAcoustics fireBallSound;
     private ICRogueFireInteractionHandler handler;
@@ -164,13 +161,4 @@ public class Fire extends Projectile implements Acoustics {
 
         }
     }
-
-
-
-
-
-
-
-
-
-    }
+}

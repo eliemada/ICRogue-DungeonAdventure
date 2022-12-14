@@ -66,8 +66,9 @@ public class Connector extends AreaEntity {
      * @param keyIds (int[]): The keychain with which to try to unlock.
      */
     public void open(ArrayList<Integer> keyIds) {
-        if (((state == State.LOCKED) && (keyIds.size() > 0) && keyIds.contains(keyId))) state = State.OPEN;
-        else open();
+        if (((state == State.LOCKED) && (keyIds.size() > 0) && keyIds.contains(keyId))) {
+            state = State.OPEN;
+        } else open();
     }
 
     /**
