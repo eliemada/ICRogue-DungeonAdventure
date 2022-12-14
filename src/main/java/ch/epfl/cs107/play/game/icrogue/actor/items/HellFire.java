@@ -9,6 +9,10 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * HellFire is a stationary fire that damages the player on contact.
+ * It is implemented as an item as it does not move like a projectile.
+ */
 public class HellFire extends Item {
     private final int DAMAGE = 2;
     private Sprite [] sprites = Sprite.extractSprites("zelda/fire",

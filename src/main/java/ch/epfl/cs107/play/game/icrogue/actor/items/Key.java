@@ -9,6 +9,9 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * Key is a collectible item that can be used to open doors.
+ */
 public class Key extends Item  {
     private final int ID;
 

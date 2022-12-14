@@ -9,6 +9,9 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * The heart is a collectible item that can be used to heal the player.
+ */
 public class Heart extends Item{
 
     private Sprite[] hearSprite = Sprite.extractSprites("zelda/heart",

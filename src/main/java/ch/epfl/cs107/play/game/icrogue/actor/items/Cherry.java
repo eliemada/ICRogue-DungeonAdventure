@@ -7,6 +7,9 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+/**
+ * Cherry is a collectible item that looks like a cherry and does absolutely nothing.
+ */
 public class Cherry extends Item{
 
     public Cherry(Area area, Orientation orientation, DiscreteCoordinates position) {

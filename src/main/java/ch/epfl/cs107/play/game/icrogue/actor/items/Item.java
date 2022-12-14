@@ -13,8 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Elie BRUNO (elie.bruno@epfl.ch)
- * @author Sekuba
+ * Items are collectibles that are further specified by their subclasses.
  */
 public abstract class Item extends CollectableAreaEntity {
 

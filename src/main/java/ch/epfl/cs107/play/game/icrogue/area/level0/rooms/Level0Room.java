@@ -62,12 +62,6 @@ public class Level0Room extends ICRogueRoom{
         public int getIndex() {
             return this.ordinal();
         }
-
-        // TODO implement destinations from this
-        @Override
-        public DiscreteCoordinates getDestination() {
-            return destination;
-        }
     }
 
     public Level0Room(DiscreteCoordinates givenRoomCoordinates) {
