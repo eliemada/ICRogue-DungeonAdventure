@@ -15,7 +15,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Heart extends Item{
 
     private Sprite[] hearSprite = Sprite.extractSprites("zelda/heart",
-            8, .5f, .5f,
+            4, .5f, .5f,
             this , 16, 16);
     Animation animation = new Animation(3,hearSprite);
 

@@ -191,7 +191,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     }
 
     private void heal(){
-        healthPoints +=5;
+        healthPoints = Math.min(healthPoints + 5, HEALTHPOINTS);
     }
 
 
@@ -323,11 +323,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
         public void interactWith(Heart heart, boolean isCellInteraction){
             if (wantsCellInteraction()&& isCellInteraction){
-                if (getHp() + 5 <= 30) {
                     heart.collect();
                      heal();
                 }
-            }
+
         }
 
 
