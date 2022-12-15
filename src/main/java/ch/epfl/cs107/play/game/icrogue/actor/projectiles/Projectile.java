@@ -15,6 +15,11 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This Java code defines a `Projectile` class, which extends the `ICRogueActor` class and
+ * implements the `Consumable` and `Interactor` interfaces. `Projectile` objects are projectiles
+ * that can be fired by the player or enemies in a game.
+ */
 public abstract class Projectile extends ICRogueActor implements Consumable, Interactor
 {
     private ICRogueProjectileInteractionHandler handler;
@@ -26,7 +31,12 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     private boolean isConsumed;
     private Sprite sprite;
 
-
+    /**
+     * Constructs a new Projectile object with the given room, orientation, and position, using the default move duration and damage.
+     * @param room The Area in which the Projectile will exist.
+     * @param orientation The Orientation of the Projectile.
+     * @param position The DiscreteCoordinates of the Projectile.
+     */
     public Projectile(Area room, Orientation orientation, DiscreteCoordinates position) {
         this(room, orientation, position,DEFAULT_DAMAGE,DEFAULT_MOVE_DURATION);
     }
@@ -122,8 +132,6 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
             }
 
         }
-
-
     }
 
 }

@@ -98,21 +98,26 @@ public class Sprite extends ImageGraphics {
 		}
 		return sprites;
 	}
+
 	public static Sprite[][] extractSpritesCol(String name, int nbFrames, float width, float height,
-											 Positionable parent, int regionWidth, int regionHeight, Vector anchor, Orientation[] order){
+											   Positionable parent, int regionWidth, int regionHeight, Vector anchor, Orientation[] order) {
 
 		Sprite[][] sprites = new Sprite[4][nbFrames];
 
-		for(int i = 0; i < nbFrames; i++){
+		for (int i = 0; i < nbFrames; i++) {
 			int j = 0;
-			sprites[order[0].ordinal()][i]  = new Sprite(name, width, height, parent,
-					new RegionOfInterest(regionWidth*j++, regionHeight*i, regionWidth, regionHeight), anchor);
-			sprites[order[1].ordinal()][i]  = new Sprite(name, width, height, parent,
-					new RegionOfInterest(regionWidth*j++, regionHeight*i, regionWidth, regionHeight), anchor);
-			sprites[order[2].ordinal()][i]  = new Sprite(name, width, height, parent,
-					new RegionOfInterest(regionWidth*j++, regionHeight*i, regionWidth, regionHeight), anchor);
-			sprites[order[3].ordinal()][i]  = new Sprite(name, width, height, parent,
-					new RegionOfInterest(regionWidth*j, regionHeight*i, regionWidth, regionHeight), anchor);
+			sprites[order[0].ordinal()][i] = new Sprite(name, width, height, parent,
+					new RegionOfInterest(regionWidth * j++, regionHeight * i, regionWidth,
+							regionHeight), anchor);
+			sprites[order[1].ordinal()][i] = new Sprite(name, width, height, parent,
+					new RegionOfInterest(regionWidth * j++, regionHeight * i, regionWidth,
+							regionHeight), anchor);
+			sprites[order[2].ordinal()][i] = new Sprite(name, width, height, parent,
+					new RegionOfInterest(regionWidth * j++, regionHeight * i, regionWidth,
+							regionHeight), anchor);
+			sprites[order[3].ordinal()][i] = new Sprite(name, width, height, parent,
+					new RegionOfInterest(regionWidth * j, regionHeight * i, regionWidth,
+							regionHeight), anchor);
 		}
 		return sprites;
 	}

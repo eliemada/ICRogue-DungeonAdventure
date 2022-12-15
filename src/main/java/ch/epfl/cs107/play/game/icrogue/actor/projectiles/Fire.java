@@ -1,8 +1,4 @@
-package ch.epfl.cs107.play.game.icrogue.actor.projectiles;/*
- *	Author:      Leon Petrinos
- *	Date:
- */
-
+package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 import ch.epfl.cs107.play.game.actor.Acoustics;
 import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
