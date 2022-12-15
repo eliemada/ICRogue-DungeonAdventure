@@ -9,6 +9,9 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * The staff is a collectible item that can be used to throw fireballs.
+ */
 public class Staff extends Item{
 
     private Sprite [] staffSprite = Sprite.extractSprites("zelda/staff",

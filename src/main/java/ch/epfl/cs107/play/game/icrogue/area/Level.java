@@ -86,7 +86,7 @@ public abstract class Level implements Logic {
 
     /**
      * Handles the pseudorandom placement of rooms on the level's map.
-     * Rooms are mapped, created connected.
+     * Rooms are mapped, created and connected.
      * @param roomsDistribution : the requested distribution of the rooms in the level.
      */
     private void randomPlaceGen(int[] roomsDistribution) {
@@ -120,6 +120,7 @@ public abstract class Level implements Logic {
                     createRoom(i, position);
                     mappedPlaces[position.x][position.y] = MapState.CREATED;
                 }
+            // boss room
             } else {
                 DiscreteCoordinates position = new DiscreteCoordinates(0, 0);
                 for (int x = 0; x < mappedPlaces.length; x++)

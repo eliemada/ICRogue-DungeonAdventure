@@ -2,11 +2,8 @@ package ch.epfl.cs107.play.game.icrogue.area.level0;
 
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0KeyRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.*;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room.Level0Connectors;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurretRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 /**
@@ -35,10 +32,12 @@ public class Level0 extends Level {
         TURRET (2),
         STAFF (2),
         KEY (1),
-        NORMAL (6),
+        HELL (4),
+        NORMAL (3),
         SPAWN (1);
 
-        private int count = 0;
+
+        private int count;
         Level0RoomTypes (int count) {
             this.count = count;
         }
@@ -90,7 +89,7 @@ public class Level0 extends Level {
      */
     @Override
     protected void createRoom(int type, DiscreteCoordinates position) {
-        if (type == 4) {
+        if (type == 5) {
             setRoom(position, new Level0Room(position));
             setStartingRoom(position);
         } else
@@ -99,7 +98,8 @@ public class Level0 extends Level {
                 case 0 -> setRoom(position, new Level0TurretRoom(position));
                 case 1 -> setRoom(position, new Level0StaffRoom(position));
                 case 2 -> setRoom(position, new Level0KeyRoom(position, BOSS_KEY_ID));
-                case 3 -> setRoom(position, new Level0Room(position));
+                case 3 -> setRoom(position, new Level0HellRoom(position));
+                case 4 -> setRoom(position, new Level0Room(position));
             }
     }
 

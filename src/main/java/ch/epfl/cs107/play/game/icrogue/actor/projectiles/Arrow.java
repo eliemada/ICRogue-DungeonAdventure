@@ -24,7 +24,6 @@ public class Arrow extends Projectile implements Acoustics {
     // SoundAcoustics object for the sound effect of the arrow being fired
     private SoundAcoustics arrowSound;
     private SoundAcoustics damageSound;
-    // The orientation of the arrow
     private Orientation    orientation;
 
     private boolean soundHasBeenExecuted = false;

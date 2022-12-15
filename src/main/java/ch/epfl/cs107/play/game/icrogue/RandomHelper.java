@@ -21,28 +21,11 @@ public class RandomHelper {
 
 
     /**
-     * Chooses k random elements from the given list
-     * @param k the number of elements to pick
-     * @param list the list of elements
-     * @return a list with k randomly chosen elements
+     * Choose k coordinates from a list of coordinates
+     * @param k (int) the number of elements to pick
+     * @param list (ArrayList<DiscreteCoordinates>) the list of coordinates
+     * @return (ArrayList<DiscreteCoordinates>) a list with k randomly chosen coordinates
      */
-    public static List<Integer> chooseKInList(int k, List<Integer> list) {
-        if (k > list.size())
-            throw new IllegalArgumentException();
-
-        int remainingValues = k;
-        List<Integer> values = new ArrayList<>(list), res = new ArrayList<>();
-
-        while (remainingValues > 0) {
-            int ix = chooseGenerator.nextInt(values.size());
-            res.add(values.get(ix));
-            values.remove(ix);
-            remainingValues -= 1;
-        }
-
-        return res;
-    }
-
     public static ArrayList<DiscreteCoordinates> chooseKInList(int k, ArrayList<DiscreteCoordinates> list) {
         if (k > list.size())
             throw new IllegalArgumentException();
