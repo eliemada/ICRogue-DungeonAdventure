@@ -33,7 +33,6 @@ public class ICRogue extends AreaGame {
     private void initLevel() {
         level = new Level0();
         level.registerRooms(this);
-        // TODO what does forceBegin mean?
         setCurrentArea(level.getTitleStartRoom(), false);
         player = new ICRoguePlayer(getCurrentArea(), Orientation.UP, POS_ARRIVAL);
         player.enterArea(getCurrentArea(), POS_ARRIVAL);
@@ -88,8 +87,6 @@ public class ICRogue extends AreaGame {
         getCurrentArea().registerActor(hpBar);
 
         hpBar.update(deltaTime);
-        // TODO delete below tests
-//        if ((currentRoom != null) && !currentRoom.isOff()) System.out.println("!isOff");
 
     }
 

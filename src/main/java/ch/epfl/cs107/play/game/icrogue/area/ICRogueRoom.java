@@ -80,27 +80,6 @@ public abstract class ICRogueRoom extends Area implements Logic {
             for (Connector connector : roomConnectors) connector.open();
             wasOn = true;
         }
-
-        // TODO delete below cheat codes after testing
-//        if (keyboard.get(Keyboard.O).isPressed()){
-//            for (Connector connector : roomConnectors){
-//                connector.setState(Connector.State.OPEN);
-//            }
-//        }
-//        if (keyboard.get(Keyboard.L).isPressed()){
-//            roomConnectors[0].lockWithKey(1);
-//        }
-//
-//        if (keyboard.get(Keyboard.T).isPressed()){
-//            for (Connector connector : roomConnectors){
-//                if (connector.getState() == Connector.State.CLOSED){
-//                    connector.setState(Connector.State.OPEN);
-//                }
-//                else if (connector.getState() == Connector.State.OPEN){
-//                    connector.setState(Connector.State.CLOSED);
-//                }
-//            }
-//        }
     }
 
 
