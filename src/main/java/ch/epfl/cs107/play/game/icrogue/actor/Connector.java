@@ -187,7 +187,7 @@ public class Connector extends AreaEntity {
      * Call directly the interaction on this if accepted
      *
      * @param v                 (AreaInteractionVisitor) : the visitor
-     * @param isCellInteraction
+     * @param isCellInteraction (boolean) : true if the interaction is a cell interaction
      */
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

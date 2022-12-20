@@ -37,9 +37,9 @@ public class Level0 extends Level {
         SPAWN (1);
 
 
-        private int count;
+        private final int COUNT;
         Level0RoomTypes (int count) {
-            this.count = count;
+            this.COUNT = count;
         }
 
         /**
@@ -50,7 +50,7 @@ public class Level0 extends Level {
             Level0RoomTypes[] types = Level0RoomTypes.values();
             int[] roomsDistribution = new int[types.length];
             for (int i = 0 ; i < types.length; i++) {
-                roomsDistribution[i] = types[i].count;
+                roomsDistribution[i] = types[i].COUNT;
             }
             return roomsDistribution;
         }

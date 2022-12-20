@@ -249,7 +249,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         /**
          * Interact with a staff (item)
          * @param staff (Staff) : the staff the player is interacting with
-         * @param isCellInteraction
+         * @param isCellInteraction (boolean) : true if the interaction is with a cell
          */
         public void interactWith(Staff staff, boolean isCellInteraction){
             if (wantsViewInteraction()){
@@ -261,7 +261,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         /**
          * Interact with a key (item)
          * @param key (Key) : the key that the player is interacting with
-         * @param isCellInteraction
+         * @param isCellInteraction (boolean) : true if the interaction is with a cell
          */
         public void interactWith(Key key, boolean isCellInteraction){
             if (wantsCellInteraction() && isCellInteraction){
@@ -275,8 +275,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
          * changes from locked to open if the player is in possession of the associated key)
          * If it is in touch/contact interaction and not moving,
          * it can transit to the destination of the connector.
-         * @param connector
-         * @param isCellInteraction
+         * @param connector (Connector) : the connector the player is interacting with
+         * @param isCellInteraction (boolean) : true if the interaction is with a cell
          */
         //
         public void interactWith(Connector connector, boolean isCellInteraction){
@@ -292,12 +292,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
 
         /**
-         * @Brief Small method to allow the player to interact with the arrow, It allows us to only receive
+         * Small method to allow the player to interact with the arrow, It allows us to only receive
          * damage once from the arrow because if you don't check that the arrow is not consumed, you could
          * try to make the arrow unregister multiple times which would lead to multiple errors and only
          * take damage once from the arrow.
-         * @param arrow
-         * @param isCellInteraction
+         * @param arrow (Arrow) : the arrow the player is interacting with
+         * @param isCellInteraction (boolean) : true if the interaction is with a cell
          */
         public void interactWith(Arrow arrow, boolean isCellInteraction){
 
@@ -312,7 +312,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
          * If the player steps on hellfire, extinguish it and take damage.
          * The hellfire does not move and is therefore not a projectile.
          * @param hellfire the hellfire that the player is stepping on
-         * @param isCellInteraction
+         * @param isCellInteraction true if the interaction is with a cell
          */
         public void interactWith(HellFire hellfire, boolean isCellInteraction){
             if(isCellInteraction){

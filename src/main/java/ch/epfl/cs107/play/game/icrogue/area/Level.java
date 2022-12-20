@@ -150,11 +150,7 @@ public abstract class Level implements Logic {
         MapState[][] roomPlacementMap = new MapState[roomsToPlace][roomsToPlace];
 
         // initialize map
-        for (int i = 0; i < roomPlacementMap.length; i++) {
-            for (int j = 0; j < roomPlacementMap[i].length; j++) {
-                roomPlacementMap[i][j] = MapState.NULL;
-            }
-        }
+        for (MapState[] mapStates : roomPlacementMap) Arrays.fill(mapStates, MapState.NULL);
         // set the 'middle' room as PLACED
         roomPlacementMap[roomsList.length / 2][roomsList.length / 2] = MapState.PLACED;
         fillMap(roomPlacementMap, roomsToPlace - 1, false);
